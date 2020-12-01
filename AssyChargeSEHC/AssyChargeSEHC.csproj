@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>samsung-256.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -104,6 +107,27 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="License-LGPL.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\edit-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\settings-9-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\about-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\qr-code-48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="samsung-64.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\samsung-128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="samsung-256.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
