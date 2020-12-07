@@ -23,14 +23,31 @@ namespace AssyChargeSEHC
         }
         public enum Judge { None, OK, NG }
 
+        private float _voltageStandby = (float)0.0;
+
         private float _voltage = (float)0.0;
-        private float _current = (float)0.0;
-        private string _IRLeft;
-        private string _IRCenter;
-        private string _IRRight;
+        private float _current = (float)0.00;
+        private string _IRLeft = "Null";
+        private string _IRCenter = "Null";
+        private string _IRRight = "Null";
+
+        private Judge _judgeVoltageStandby = Judge.None;
         private Judge _judgeVoltage = Judge.None;
         private Judge _judgeCurrent = Judge.None;
+        private Judge _judgeIRLeft = Judge.None;
+        private Judge _judgeIRCenter = Judge.None;
+        private Judge _judgeIRRight = Judge.None;
+        private Judge _judgeFinal = Judge.None;
 
+        public float VoltageStandby
+        {
+            get { return _voltageStandby; }
+            set
+            {
+                _voltageStandby = value;
+                OnPropertyChanged("VoltageStandby");
+            }
+        }
         public float Voltage
         {
             get { return _voltage; }
@@ -49,7 +66,43 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("Current");
             }
         }
+        public string IRLeft
+        {
+            get { return _IRLeft; }
+            set
+            {
+                _IRLeft = value;
+                OnPropertyChanged("IRLeft");
+            }
+        }
+        public string IRCenter
+        {
+            get { return _IRCenter; }
+            set
+            {
+                _IRCenter = value;
+                OnPropertyChanged("IRCenter");
+            }
+        }
+        public string IRRight
+        {
+            get { return _IRRight; }
+            set
+            {
+                _IRRight = value;
+                OnPropertyChanged("IRRight");
+            }
+        }
 
+        public Judge JudgeVoltageStandby
+        {
+            get { return _judgeVoltageStandby; }
+            set
+            {
+                _judgeVoltageStandby = value;
+                OnPropertyChanged("JudgeVoltageStandby");
+            }
+        }
         public Judge JudgeVoltage
         {
             get { return _judgeVoltage; }
@@ -67,6 +120,49 @@ namespace AssyChargeSEHC
                 _judgeCurrent = value;
                 OnPropertyChanged("JudgeCurrent");
             }
+        }
+        public Judge JudgeIRLeft
+        {
+            get { return _judgeIRLeft; }
+            set
+            {
+                _judgeIRLeft = value;
+                OnPropertyChanged("JudgeIRLeft");
+            }
+        }
+        public Judge JudgeIRCenter
+        {
+            get { return _judgeIRCenter; }
+            set
+            {
+                _judgeIRCenter = value;
+                OnPropertyChanged("JudgeIRCenter");
+            }
+        }
+        public Judge JudgeIRRight
+        {
+            get { return _judgeIRRight; }
+            set
+            {
+                _judgeIRRight = value;
+                OnPropertyChanged("JudgeIRRight");
+            }
+        }
+        public Judge JudgeFinal
+        {
+            get { return _judgeFinal; }
+            set
+            {
+                _judgeFinal = value;
+                OnPropertyChanged("JudgeFinal");
+            }
+        }
+        public bool FinalJudgement()
+        {
+            if (_judgeVoltageStandby == Judge.OK && _judgeIRLeft == Judge.OK && _judgeIRCenter == Judge.OK && _judgeIRRight == Judge.OK && _judgeVoltage == Judge.OK && _judgeCurrent == Judge.OK)
+                return true;
+            else
+                return false;
         }
     }
 }

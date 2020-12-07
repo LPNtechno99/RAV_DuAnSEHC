@@ -18,12 +18,15 @@ using AssyChargeSEHC.DAO;
 using System.Data;
 using System.Windows.Controls.Primitives;
 using AssyChargeSEHC.ModelEF;
-using FileConvert;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
 using System.IO.Ports;
 using System.Threading;
 using System.Windows.Threading;
+using System.Diagnostics;
+using IronBarCode;
+using Sres.Net.EEIP;
+using Microsoft.Win32;
 
 namespace AssyChargeSEHC
 {
@@ -33,6 +36,7 @@ namespace AssyChargeSEHC
     public partial class MainWindow : Window
     {
         SerialPort _port;
+        EEIPClient eeipClient = null;
         DispatcherTimer timer = new DispatcherTimer();
 
         //Connect Excel
@@ -86,8 +90,23 @@ namespace AssyChargeSEHC
 
             //Binding
 
-            this.labelCurVoltage.DataContext = MeasurementValues.Instance();
+            this.labelVoltageStandby.DataContext = MeasurementValues.Instance();
+            this.labelIRLeft.DataContext = MeasurementValues.Instance();
+            this.labelIRCenter.DataContext = MeasurementValues.Instance();
+            this.labelIRRight.DataContext = MeasurementValues.Instance();
+            this.labelVoltage.DataContext = MeasurementValues.Instance();
             this.labelCurrent.DataContext = MeasurementValues.Instance();
+
+            this.labelJudgeVoltageStandby.DataContext = MeasurementValues.Instance();
+            this.labelJudgeIRLeft.DataContext = MeasurementValues.Instance();
+            this.labelJudgeIRCenter.DataContext = MeasurementValues.Instance();
+            this.labelJudgeIRRight.DataContext = MeasurementValues.Instance();
+            this.labelJudgeVoltage.DataContext = MeasurementValues.Instance();
+            this.labelJudgeCurrent.DataContext = MeasurementValues.Instance();
+
+            this.labelFinalJudgement.DataContext = MeasurementValues.Instance();
+
+            StartAppExcel();
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -144,6 +163,10 @@ namespace AssyChargeSEHC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            eeipClient = new EEIPClient();
+            eeipClient.IPAddress = "192.168.0.10";
+            eeipClient.RegisterSession();
+
             using (var dao = new UserDAO())
             {
                 cbbModelList.ItemsSource = dao.GetModelList();
@@ -162,7 +185,7 @@ namespace AssyChargeSEHC
 
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (MessageBox.Show("Are you sure Exit?", "Message", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (System.Windows.MessageBox.Show("Are you sure Exit?", "Message", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 this.Close();
             }
@@ -182,14 +205,14 @@ namespace AssyChargeSEHC
 
         void OpenExcelResultFile()
         {
-            string currentDir = Environment.CurrentDirectory + "\\" + "TemplateExcel.xlsx";
-            string currentDailyData = "D:\\Data\\" + DateTime.Now.ToString("dd/MM/yyyy") + "_DataCollect" + ".xlsx";
+            string currentDir = Environment.CurrentDirectory + "\\" + "ExcelTemplate.xlsx";
+            string currentDailyData = "D:\\Data\\ExcelFile\\" + DateTime.Now.ToString("dd-MM-yyyy") + "_DataCollect" + ".xlsx";
             if (!File.Exists(currentDailyData))
             {
                 File.Copy(@currentDir, @currentDailyData);
             }
 
-            if (File.Exists(currentDailyData))
+            if (File.Exists(@currentDailyData))
             {
                 _myExcel.Workbooks.Open(@currentDailyData);
                 _myDataTemplateWorkSheet = _myExcel.ActiveWorkbook.Worksheets["Sheet1"];
@@ -199,11 +222,140 @@ namespace AssyChargeSEHC
                 _CountDataInTemplate = tempRange.Row - 1;
             }
         }
+        /// <summary>
+        /// Kill Excel
+        /// </summary>
+        void KillAppExcel()
+        {
+            foreach (var process in Process.GetProcessesByName("EXCEL"))
+            {
+                process.Kill();
+            }
+        }
+        void StartAppExcel()
+        {
+            KillAppExcel();
+            _myExcel = new Excel.Application();
 
+            OpenExcelResultFile();
+        }
+
+        private void ExcelTemplateInput(Excel.Range tempRange)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                // ID
+                tempRange.Value2 = "1";
+                tempRange = tempRange.Offset[0, 1];
+                // Ngay Thang
+                tempRange.Value2 = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                tempRange = tempRange.Offset[0, 1];
+                // Standby VolMin
+                tempRange.Value2 = "7";
+                tempRange = tempRange.Offset[0, 1];
+                // Standby VolMax
+                tempRange.Value2 = "9";
+                tempRange = tempRange.Offset[0, 1];
+                // Charging VolMin
+                tempRange.Value2 = "24.0";
+                tempRange = tempRange.Offset[0, 1];
+                // Charging VolMax
+                tempRange.Value2 = "25.2";
+                tempRange = tempRange.Offset[0, 1];
+                // Charging CurMin
+                tempRange.Value2 = "1.45";
+                tempRange = tempRange.Offset[0, 1];
+                // Charging CurMax
+                tempRange.Value2 = "1.55";
+                tempRange = tempRange.Offset[0, 1];
+                //Standby IRLeft
+                tempRange.Value2 = "L011X1";
+                tempRange = tempRange.Offset[0, 1];
+                //Standby IR Center
+                tempRange.Value2 = "L111XX";
+                tempRange = tempRange.Offset[0, 1];
+                //Standby IR Right
+                tempRange.Value2 = "L0111X";
+                tempRange = tempRange.Offset[0, 1];
+                // Voltage Measurement Value
+                tempRange.Value2 = "24.3";
+                tempRange = tempRange.Offset[0, 1];
+                // Current Measurement Value
+                tempRange.Value2 = "1.52";
+                tempRange = tempRange.Offset[0, 1];
+                // IRLeft Measurement Value
+                tempRange.Value2 = "L011X1";
+                tempRange = tempRange.Offset[0, 1];
+                // IRCenter Measurement Value
+                tempRange.Value2 = "L111XX";
+                tempRange = tempRange.Offset[0, 1];
+                // IRRight Measurement Value
+                tempRange.Value2 = "L0111X";
+                tempRange = tempRange.Offset[0, 1];
+                // Judge
+                tempRange.Value2 = "OK";
+                tempRange = tempRange.Offset[0, 1];
+            });
+        }
         private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
-            _port.Open();
-            Thread.Sleep(200);
+            //Open COM read Voltage and Current
+            //_port.Open();
+            //Thread.Sleep(200);
+
+            //Read PLC Keyence
+            try
+            {
+                this.Dispatcher.Invoke(new EventHandler((obj, evt) =>
+                {
+                    byte[] result = eeipClient.AssemblyObject.getInstance(100);
+                    //label1.Text = string.Format("{0}", EEIPClient.ToUshort(result));
+                    result = eeipClient.AssemblyObject.getInstance(101);
+                    //label2.Text = string.Format("{0}", EEIPClient.ToUshort(result));
+                }));
+            }
+            catch (Exception)
+            {
+
+            }
+
+            if (_myDataTemplateWorkSheet != null)
+            {
+                _CountDataInTemplate += 1;
+                var tempRange = (Excel.Range)_myDataTemplateWorkSheet.Cells[_CountDataInTemplate, 1];
+                ExcelTemplateInput(tempRange);
+            }
+            QRCodeWriter.CreateQrCode("Abc-1234,cde678,0074741740140140401,74981749174", 500, QRCodeWriter.QrErrorCorrectionLevel.Medium).SaveAsPng("MyQRCode.png");
+
+            Uri fileUri = new Uri(Environment.CurrentDirectory +"\\MyQRCode.png");
+            imgQRCode.Source = new BitmapImage(fileUri);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+           
+            try
+            {
+                var temp = _myExcel.Workbooks.Count;
+                _myExcel.ActiveWorkbook.Save();
+                switch (temp)
+                {
+                    case 1:
+                        _myExcel.Workbooks[1].Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        break;
+                    case 2:
+                        _myExcel.Workbooks[1].Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        _myExcel.ActiveWorkbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        break;
+                    default:
+                        _myExcel.ActiveWorkbook.Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        _myExcel.Workbooks[2].Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        _myExcel.Workbooks[1].Close(false, System.Reflection.Missing.Value, System.Reflection.Missing.Value);
+                        _myExcel.Quit();
+                        break;
+                }
+            }
+            catch { }
         }
     }
 }

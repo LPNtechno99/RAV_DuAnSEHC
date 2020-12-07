@@ -123,7 +123,8 @@ D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\bin\Debug\System.Numerics.Vectors.xml
 D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\bin\Debug\System.Threading.Tasks.Extensions.xml
 D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\obj\Debug\AssyChargeSEHC_Content.g.cs
-D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\bin\Debug\FileConvert.dll
 D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.csproj.ResolveComReference.cache
 D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\obj\Debug\GeneratedInternalTypeHelper.g.cs
-D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.csprojAssemblyReference.cache
+D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\bin\Debug\IronBarCode.dll
+D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\bin\Debug\System.Drawing.Common.dll
+D:\PM\SEHC\RAV_DuAnSEHC\AssyChargeSEHC\bin\Debug\IronBarCode.xml
