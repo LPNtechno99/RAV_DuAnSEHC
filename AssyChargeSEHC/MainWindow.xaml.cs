@@ -26,6 +26,8 @@ using System.Windows.Threading;
 using System.Diagnostics;
 using IronBarCode;
 using Sres.Net.EEIP;
+using Zebra.Sdk.Comm;
+using Zebra.Sdk.Printer;
 using Microsoft.Win32;
 
 namespace AssyChargeSEHC
@@ -45,6 +47,8 @@ namespace AssyChargeSEHC
         int _CountDataInTemplate;
 
         string _strRecievieFromCOM = "";
+        const string PrinterIPAddress = "192.168.0.5";
+        const string PLCIPAddress = "192.168.0.10";
         public MainWindow()
         {
             InitializeComponent();
@@ -109,6 +113,39 @@ namespace AssyChargeSEHC
             StartAppExcel();
         }
 
+        /// <summary>
+        /// Send string print
+        /// </summary>
+        /// <param name="theIpAddress"></param>
+        /// <param name="strPrint"></param>
+        private void SendZplOverTcp(string theIpAddress, string strPrint)
+        {
+            // Instantiate connection for ZPL TCP port at given address
+            Connection thePrinterConn = new TcpConnection(theIpAddress, TcpConnection.DEFAULT_ZPL_TCP_PORT);
+
+            try
+            {
+                // Open the connection - physical connection is established here.
+                thePrinterConn.Open();
+
+                // This example prints "This is a ZPL test." near the top of the label.
+                string zplData = "^XA^FO20,20^A0N,25,25^FD" + strPrint + "^FS^XZ";
+
+                // Send the data to printer as a byte array.
+                thePrinterConn.Write(Encoding.UTF8.GetBytes(zplData));
+            }
+            catch (ConnectionException e)
+            {
+                // Handle communications error here.
+               MessageBox.Show(e.ToString());
+            }
+            finally
+            {
+                // Close the connection to release resources.
+                thePrinterConn.Close();
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             _port.Close();
@@ -163,9 +200,9 @@ namespace AssyChargeSEHC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            eeipClient = new EEIPClient();
-            eeipClient.IPAddress = "192.168.0.10";
-            eeipClient.RegisterSession();
+            //eeipClient = new EEIPClient();
+            //eeipClient.IPAddress = PLCIPAddress;
+            //eeipClient.RegisterSession();
 
             using (var dao = new UserDAO())
             {

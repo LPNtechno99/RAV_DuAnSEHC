@@ -57,28 +57,27 @@
                     <TextBlock Margin="20 0 0 0" Text="SAMSUNG ASSY CHARGE"/>
                 </StackPanel>
             </Label>
-            <ToolBar Grid.Column="1">
-                <Button FontSize="16" FontWeight="Bold">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Margin="0 0 5 0" Source="/Images/edit-32.png" Height="20"/>
-                        <TextBlock Text="MODEL"/>
-                    </StackPanel>
-                </Button>
-                <Separator/>
-                <Button FontSize="16" FontWeight="Bold">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Margin="0 0 5 0" Source="/Images/settings-9-32.png" Height="20"/>
-                        <TextBlock Text="SETTINGS"/>
-                    </StackPanel>
-                </Button>
-                <Separator/>
-                <Button FontSize="16" FontWeight="Bold">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Margin="0 0 5 0" Source="/Images/about-32.png" Height="20"/>
-                        <TextBlock Text="Abouts"/>
-                    </StackPanel>
-                </Button>
-            </ToolBar>
+            <Menu Grid.Column="1" VerticalAlignment="Center">
+                <MenuItem FontSize="20" FontWeight="Bold" Margin="20 0 0 0">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Images/edit-32.png" Height="20"/>
+                            <TextBlock Margin="5 0 0 0" Text="Model"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem Header="Edit" FontSize="18" FontWeight="Bold"/>
+                    <Separator/>
+                    <MenuItem Header="Add" FontSize="18" FontWeight="Bold"/>
+                </MenuItem>
+                <MenuItem FontSize="20" FontWeight="Bold">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Images/settings-9-32.png" Height="20"/>
+                            <TextBlock Margin="5 0 0 0" Text="Settings"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+            </Menu>
         </Grid>
         <Grid Grid.Row="1" Margin="0 2 0 0">
             <Grid.RowDefinitions>
@@ -242,7 +241,7 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Judge}">
-                                            
+
                                         </TextBlock>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
