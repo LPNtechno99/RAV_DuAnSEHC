@@ -37,7 +37,8 @@ namespace AssyChargeSEHC
     /// </summary>
     public partial class MainWindow : Window
     {
-        SerialPort _port;
+        SerialPort COM_MeasureVolCur;
+        SerialPort COM_IR;
         EEIPClient eeipClient = null;
         DispatcherTimer timer = new DispatcherTimer();
 
@@ -46,23 +47,17 @@ namespace AssyChargeSEHC
         Excel.Worksheet _myDataTemplateWorkSheet;
         int _CountDataInTemplate;
 
-        string _strRecievieFromCOM = "";
+        string _strReceiveCOM_MeasureVolCur = "";
+        string _strReceiveCOM_IR = "";
         const string PrinterIPAddress = "192.168.0.5";
         const string PLCIPAddress = "192.168.0.10";
+
         public MainWindow()
         {
             InitializeComponent();
 
             timer.Interval = new TimeSpan(0, 0, 2);
             timer.Tick += new EventHandler(Timer_Tick);
-
-            _port = new SerialPort();
-            _port.PortName = "COM3";
-            _port.BaudRate = 9600;
-            _port.Parity = Parity.None;
-            _port.DataBits = 8;
-
-            _port.DataReceived += new SerialDataReceivedEventHandler(_port_DataReceived);
 
             //setup GraphLeft
             GraphPane paneLeft = graphIRLeft.GraphPane;
@@ -110,7 +105,31 @@ namespace AssyChargeSEHC
 
             this.labelFinalJudgement.DataContext = MeasurementValues.Instance();
 
+            this.labelPass.DataContext = Common.Instance();
+            this.labelNG.DataContext = Common.Instance();
+            this.labelTotal.DataContext = Common.Instance();
+
             StartAppExcel();
+        }
+
+        void InitializeCOM()
+        {
+            //Initialize COM measure Voltage, Current
+            COM_MeasureVolCur = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
+            COM_MeasureVolCur.ReadTimeout = 2000;
+            COM_MeasureVolCur.WriteTimeout = 2000;
+            COM_MeasureVolCur.DataReceived += new SerialDataReceivedEventHandler(COM_MeasureVolCur_DataReceived);
+
+            //Initialize COM check IR
+            COM_IR = new SerialPort("COM4", 9600, Parity.None, 8, StopBits.One);
+            COM_IR.ReadTimeout = 2000;
+            COM_IR.WriteTimeout = 2000;
+            COM_IR.DataReceived += COM_IR_DataReceived;
+
+            //Initialize eeip connect PLC Keyence
+            eeipClient = new EEIPClient();
+            eeipClient.IPAddress = PLCIPAddress;
+            eeipClient.RegisterSession();
         }
 
         /// <summary>
@@ -137,7 +156,7 @@ namespace AssyChargeSEHC
             catch (ConnectionException e)
             {
                 // Handle communications error here.
-               MessageBox.Show(e.ToString());
+                MessageBox.Show(e.ToString());
             }
             finally
             {
@@ -148,61 +167,65 @@ namespace AssyChargeSEHC
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            _port.Close();
-            int index = _strRecievieFromCOM.IndexOf("255");
-            string[] arr1 = _strRecievieFromCOM.Split();
-            MeasurementValues.Instance().Voltage = (float)(float.Parse(arr1[6].ToString()) / 10);
-            if (MeasurementValues.Instance().Voltage < 12.0 || MeasurementValues.Instance().Voltage > 13.2)
-            {
-                MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.NG;
-            }
-            else
-                MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
+            //COM_MeasureVolCur.Close();
+            //int index = _strRecievieFromCOM.IndexOf("255");
+            //string[] arr1 = _strRecievieFromCOM.Split();
+            //MeasurementValues.Instance().Voltage = (float)(float.Parse(arr1[6].ToString()) / 10);
+            //if (MeasurementValues.Instance().Voltage < 12.0 || MeasurementValues.Instance().Voltage > 13.2)
+            //{
+            //    MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.NG;
+            //}
+            //else
+            //    MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
 
-            switch (arr1[8].ToString())
-            {
-                case "1":
-                    MeasurementValues.Instance().Current = float.Parse(arr1[9].ToString()) / (float)1000 + (float)0.250;
-                    break;
-                case "2":
-                    MeasurementValues.Instance().Current = float.Parse(arr1[9].ToString()) / (float)1000 + (float)0.500;
-                    break;
-                case "3":
-                    MeasurementValues.Instance().Current = float.Parse(arr1[9].ToString()) / (float)1000 + (float)0.750;
-                    if (MeasurementValues.Instance().Current < 0.900 || MeasurementValues.Instance().Current > 1.100)
-                    {
-                        MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.NG;
-                    }
-                    else
-                        MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
-                    break;
-                default:
-                    break;
-            }
+            //switch (arr1[8].ToString())
+            //{
+            //    case "1":
+            //        MeasurementValues.Instance().Current = float.Parse(arr1[9].ToString()) / (float)1000 + (float)0.250;
+            //        break;
+            //    case "2":
+            //        MeasurementValues.Instance().Current = float.Parse(arr1[9].ToString()) / (float)1000 + (float)0.500;
+            //        break;
+            //    case "3":
+            //        MeasurementValues.Instance().Current = float.Parse(arr1[9].ToString()) / (float)1000 + (float)0.750;
+            //        if (MeasurementValues.Instance().Current < 0.900 || MeasurementValues.Instance().Current > 1.100)
+            //        {
+            //            MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.NG;
+            //        }
+            //        else
+            //            MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
 
-        private void _port_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void COM_MeasureVolCur_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            int count = _port.BytesToRead;
-            byte[] bytearr = new byte[count];
-            _port.Read(bytearr, 0, count);
-            for (int i = 0; i < bytearr.Length - 1; i++)
-            {
-                _strRecievieFromCOM += bytearr[i] + ",";
-            }
-            timer.Start();
+            string tempStringReceive = "";
+            tempStringReceive = COM_MeasureVolCur.ReadExisting();
+
+            //int count = COM_MeasureVolCur.BytesToRead;
+            //byte[] bytearr = new byte[count];
+            //COM_MeasureVolCur.Read(bytearr, 0, count);
+            //for (int i = 0; i < bytearr.Length - 1; i++)
+            //{
+            //    _strRecievieFromCOM += bytearr[i] + ",";
+            //}
+            //timer.Start();
             //for (int i = 0; i < bytearr.Length; i++)
             //{
             //    str += bytearr[i] + ",";
             //}
             //this.richMessage.Dispatcher.Invoke(new Action(() => richMessage.AppendText(str + "\n")));
         }
-
+        private void COM_IR_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string tempRecieveString = "";
+            tempRecieveString = COM_IR.ReadExisting();
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //eeipClient = new EEIPClient();
-            //eeipClient.IPAddress = PLCIPAddress;
-            //eeipClient.RegisterSession();
 
             using (var dao = new UserDAO())
             {
@@ -355,7 +378,7 @@ namespace AssyChargeSEHC
             //{
 
             //}
-            SendZplOverTcp("192.168.0.5","Catilenguyen08052020");
+            SendZplOverTcp("192.168.0.5", "Catilenguyen08052020");
             if (_myDataTemplateWorkSheet != null)
             {
                 _CountDataInTemplate += 1;
@@ -364,13 +387,13 @@ namespace AssyChargeSEHC
             }
             QRCodeWriter.CreateQrCode("Abc-1234,cde678,0074741740140140401,74981749174", 500, QRCodeWriter.QrErrorCorrectionLevel.Medium).SaveAsPng("MyQRCode.png");
 
-            Uri fileUri = new Uri(Environment.CurrentDirectory +"\\MyQRCode.png");
+            Uri fileUri = new Uri(Environment.CurrentDirectory + "\\MyQRCode.png");
             imgQRCode.Source = new BitmapImage(fileUri);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-           
+
             try
             {
                 var temp = _myExcel.Workbooks.Count;
@@ -393,6 +416,22 @@ namespace AssyChargeSEHC
                 }
             }
             catch { }
+        }
+
+        private void Event_PushF2(object sender, ExecutedRoutedEventArgs e)
+        {
+            Process.Start("Explorer.exe", "D:\\Data\\ExcelFile");
+        }
+
+        private void Event_PushF3(object sender, ExecutedRoutedEventArgs e)
+        {
+            wdCheckQRCode wd = new wdCheckQRCode();
+            wd.ShowDialog();
+        }
+
+        private void Event_PushF4(object sender, ExecutedRoutedEventArgs e)
+        {
+
         }
     }
 }

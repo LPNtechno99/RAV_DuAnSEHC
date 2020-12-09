@@ -17,6 +17,9 @@
         <!--Command Key-->
         <RoutedUICommand x:Key="myCommandEsc" Text="text"/>
         <RoutedUICommand x:Key="myCommandF1" Text="text"/>
+        <RoutedUICommand x:Key="myCommandF2" Text="text"/>
+        <RoutedUICommand x:Key="myCommandF3" Text="text"/>
+        <RoutedUICommand x:Key="myCommandF4" Text="text"/>
         <!--Style-->
         <Style x:Key="labelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="20"/>
@@ -32,10 +35,16 @@
     <Window.InputBindings>
         <KeyBinding Key="Esc" Command="{StaticResource myCommandEsc}"/>
         <KeyBinding Key="F1" Command="{StaticResource myCommandF1}"/>
+        <KeyBinding Key="F2" Command="{StaticResource myCommandF2}"/>
+        <KeyBinding Key="F3" Command="{StaticResource myCommandF3}"/>
+        <KeyBinding Key="F4" Command="{StaticResource myCommandF4}"/>
     </Window.InputBindings>
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource myCommandEsc}" Executed="CommandBinding_Executed"/>
         <CommandBinding Command="{StaticResource myCommandF1}" Executed="CommandBinding_Executed_1"/>
+        <CommandBinding Command="{StaticResource myCommandF2}" Executed="Event_PushF2"/>
+        <CommandBinding Command="{StaticResource myCommandF3}" Executed="Event_PushF3"/>
+        <CommandBinding Command="{StaticResource myCommandF4}" Executed="Event_PushF4"/>
     </Window.CommandBindings>
     <Grid Background="White">
         <!--<WindowsFormsHost HorizontalAlignment="Left" Height="219" Margin="132,35,0,0" VerticalAlignment="Top" Width="545">
@@ -356,11 +365,11 @@
                 <!--Label gia tri-->
                 <Button Grid.Row="1" Content="RESET" FontSize="32" FontWeight="Bold" BorderBrush="Black" BorderThickness="0.8" Name="buttonReset" Click="buttonReset_Click"/>
                 <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource labelStyle}" Background="White" Foreground="#FF196819"
-                       FontSize="36" Content="00"/>
+                       FontSize="36" Content="{Binding CountPass, UpdateSourceTrigger=PropertyChanged}" Name="labelPass"/>
                 <Label Grid.Row="1" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" Foreground="#FFCD2323"
-                       FontSize="36" Content="00"/>
+                       FontSize="36" Content="{Binding CountNG, UpdateSourceTrigger=PropertyChanged}" Name="labelNG"/>
                 <Label Grid.Row="1" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" Foreground="Black"
-                       FontSize="36" Content="00"/>
+                       FontSize="36" Content="{Binding CountTotal, UpdateSourceTrigger=PropertyChanged}" Name="labelTotal"/>
             </Grid>
             <Grid Grid.Row="1" Margin="0 5 0 5">
                 <Grid.ColumnDefinitions>
@@ -368,11 +377,13 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Style="{StaticResource labelStyle}" Content="F1 - Test Status/Result List"/>
                 <Label Grid.Column="1" Style="{StaticResource labelStyle}" Content="F2 - Open Excel"/>
-                <Label Grid.Column="2" Style="{StaticResource labelStyle}" Content="F3 - Logs"/>
-                <Label Grid.Column="3" Style="{StaticResource labelStyle}" Content="Esc - Exit"/>
+                <Label Grid.Column="2" Style="{StaticResource labelStyle}" Content="F3 - Check QRCode"/>
+                <Label Grid.Column="3" Style="{StaticResource labelStyle}" Content="F4 - Logs"/>
+                <Label Grid.Column="4" Style="{StaticResource labelStyle}" Content="Esc - Exit"/>
             </Grid>
         </Grid>
     </Grid>
