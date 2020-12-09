@@ -341,21 +341,21 @@ namespace AssyChargeSEHC
             //Thread.Sleep(200);
 
             //Read PLC Keyence
-            try
-            {
-                this.Dispatcher.Invoke(new EventHandler((obj, evt) =>
-                {
-                    byte[] result = eeipClient.AssemblyObject.getInstance(100);
-                    //label1.Text = string.Format("{0}", EEIPClient.ToUshort(result));
-                    result = eeipClient.AssemblyObject.getInstance(101);
-                    //label2.Text = string.Format("{0}", EEIPClient.ToUshort(result));
-                }));
-            }
-            catch (Exception)
-            {
+            //try
+            //{
+            //    this.Dispatcher.Invoke(new EventHandler((obj, evt) =>
+            //    {
+            //        byte[] result = eeipClient.AssemblyObject.getInstance(100);
+            //        //label1.Text = string.Format("{0}", EEIPClient.ToUshort(result));
+            //        result = eeipClient.AssemblyObject.getInstance(101);
+            //        //label2.Text = string.Format("{0}", EEIPClient.ToUshort(result));
+            //    }));
+            //}
+            //catch (Exception)
+            //{
 
-            }
-
+            //}
+            SendZplOverTcp("192.168.0.5","Catilenguyen08052020");
             if (_myDataTemplateWorkSheet != null)
             {
                 _CountDataInTemplate += 1;
