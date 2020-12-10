@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\RAV\RAV_DuAnSEHC (09122020)\AssyChargeSEHC\obj\Debug\
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (10-12-2020)\AssyChargeSEHC\obj\Debug\
 AssyChargeSEHC
 none
 false
 DEBUG;TRACE
-D:\RAV\RAV_DuAnSEHC (09122020)\AssyChargeSEHC\App.xaml
-22043797645
-3-1799541913
-19-1888405276
-751123990332
-MainWindow.xaml;wdCheckQRCode.xaml;
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (10-12-2020)\AssyChargeSEHC\App.xaml
+3-208232710
+3789765963
+17-2050945728
+75-1049986337
+MainWindow.xaml;wdAddModel.xaml;wdCheckQRCode.xaml;
 
-False
+True
 

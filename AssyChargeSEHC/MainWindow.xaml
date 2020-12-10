@@ -76,7 +76,7 @@
                     </MenuItem.Header>
                     <MenuItem Header="Edit" FontSize="18" FontWeight="Bold"/>
                     <Separator/>
-                    <MenuItem Header="Add" FontSize="18" FontWeight="Bold"/>
+                    <MenuItem Name="mnuAdd" Header="Add" FontSize="18" FontWeight="Bold" Click="mnuAdd_Click"/>
                 </MenuItem>
                 <MenuItem FontSize="20" FontWeight="Bold">
                     <MenuItem.Header>
@@ -110,7 +110,7 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="Model Select:" Style="{StaticResource labelStyle}"/>
                     <ComboBox Name="cbbModelList" Grid.Column="1" Margin="2 0 0 0" FontSize="20" FontWeight="Bold"
-                              VerticalContentAlignment="Center"/>
+                              VerticalContentAlignment="Center" PreviewMouseDown="cbbModelList_PreviewMouseDown"/>
                 </Grid>
                 <Grid Grid.Column="1" Margin="5 0 0 0">
                     <Grid.ColumnDefinitions>

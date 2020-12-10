@@ -54,6 +54,8 @@ namespace AssyChargeSEHC
         const string PrinterIPAddress = "192.168.0.5";
         const string PLCIPAddress = "192.168.0.10";
 
+        int countPass, countNG, total;
+
         uint _StartProgram;
         uint _currentProgram = 0;
 
@@ -149,24 +151,26 @@ namespace AssyChargeSEHC
                         MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.OK;
                         break;
                     case 2:
+                        MeasurementValues.Instance().Voltage = (float)25.2;
+                        MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
+
+                        MeasurementValues.Instance().Current = (float)0.998;
+                        MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
+                        
+                        break;
+                    case 3:
                         MeasurementValues.Instance().IRLeft = "L011X1";
                         MeasurementValues.Instance().JudgeIRLeft = MeasurementValues.Judge.OK;
                         MeasurementValues.Instance().IRCenter = "L111XX";
                         MeasurementValues.Instance().JudgeIRCenter = MeasurementValues.Judge.OK;
                         MeasurementValues.Instance().IRRight = "L0111X";
                         MeasurementValues.Instance().JudgeIRRight = MeasurementValues.Judge.OK;
-                        break;
-                    case 3:
-                        MeasurementValues.Instance().Voltage = (float)25.2;
-                        MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
-
-                        MeasurementValues.Instance().Current = (float)0.998;
-                        MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
 
                         if (MeasurementValues.Instance().FinalJudgement())
                         {
                             MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.OK;
-                            Common.Instance().CountPass = Common.Instance().CountPass + 1;
+                            countPass++;
+                            labelPass.Content = countPass.ToString();
                         }
                         Common.Instance().CountTotal = Common.Instance().CountTotal + 1;
                         Uri fileUri = new Uri(Environment.CurrentDirectory + "\\MyQRCode.png");
@@ -180,6 +184,8 @@ namespace AssyChargeSEHC
                         _flag = true;
                         break;
                     case 4:
+                        total++;
+                        labelTotal.Content = total.ToString();
                         Reset();
                         break;
                     default:
@@ -195,29 +201,25 @@ namespace AssyChargeSEHC
                         MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.OK;
                         break;
                     case 2:
+                        MeasurementValues.Instance().Voltage = (float)25.0;
+                        MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
+
+                        MeasurementValues.Instance().Current = (float)1.032;
+                        MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
+                        break;
+                    case 3:
                         MeasurementValues.Instance().IRLeft = "L010X1";
                         MeasurementValues.Instance().JudgeIRLeft = MeasurementValues.Judge.NG;
                         MeasurementValues.Instance().IRCenter = "L111XX";
                         MeasurementValues.Instance().JudgeIRCenter = MeasurementValues.Judge.OK;
                         MeasurementValues.Instance().IRRight = "L0101X";
                         MeasurementValues.Instance().JudgeIRRight = MeasurementValues.Judge.NG;
-                        break;
-                    case 3:
-                        MeasurementValues.Instance().Voltage = (float)25.0;
-                        MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
 
-                        MeasurementValues.Instance().Current = (float)1.018;
-                        MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
-
-                        if (MeasurementValues.Instance().FinalJudgement())
-                        {
-                            MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.OK;
-                            Common.Instance().CountPass += 1;
-                        }
-                        else
+                        if (!MeasurementValues.Instance().FinalJudgement())
                         {
                             MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.NG;
-                            Common.Instance().CountNG += 1;
+                            countNG++;
+                            labelNG.Content = countNG.ToString();
                         }
                         Common.Instance().CountTotal = Common.Instance().CountTotal + 1;
                         Uri fileUri = new Uri(Environment.CurrentDirectory + "\\MyQRCode.png");
@@ -231,6 +233,8 @@ namespace AssyChargeSEHC
                         _flag = false;
                         break;
                     case 4:
+                        total++;
+                        labelTotal.Content = total.ToString();
                         Reset();
                         break;
                     default:
@@ -680,6 +684,20 @@ namespace AssyChargeSEHC
         private void Event_PushF2(object sender, ExecutedRoutedEventArgs e)
         {
             Process.Start("Explorer.exe", "D:\\Data\\ExcelFile");
+        }
+
+        private void mnuAdd_Click(object sender, RoutedEventArgs e)
+        {
+            wdAddModel wd = new wdAddModel();
+            wd.ShowDialog();
+        }
+
+        private void cbbModelList_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            using (var dao = new UserDAO())
+            {
+                cbbModelList.ItemsSource = dao.GetModelList();
+            }
         }
 
         private void Event_PushF3(object sender, ExecutedRoutedEventArgs e)

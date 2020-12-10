@@ -34,6 +34,11 @@ namespace AssyChargeSEHC.DAO
         {
             return db.ResultList.ToList();
         }
-
+        public void AddModel(string model)
+        {
+            var md = new ModelList() { Model = model };
+            db.Add(md);
+            db.SaveChanges();
+        }
     }
 }
