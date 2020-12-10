@@ -191,42 +191,42 @@
                         <Label Name="labelJudgeCurrent" Grid.Row="7" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeCurrent,Converter={StaticResource ColorChangeOKNG}}" Foreground="Black" Content="{Binding JudgeCurrent,UpdateSourceTrigger=PropertyChanged}"/>
                         <!--Checkbox Check-->
                         <Border Grid.Row="2" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="3" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="4" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="5" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="6" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="7" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
