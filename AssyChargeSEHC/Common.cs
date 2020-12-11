@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AssyChargeSEHC
 {
-    public class Common
+    public class Common : INotifyPropertyChanged
     {
 
         public static Common _instance;
@@ -26,13 +26,13 @@ namespace AssyChargeSEHC
         private int _countng = 0;
         private int _counttotal = 0;
 
-        public int CountPass
+        public int CountOK
         {
             get { return _countpass; }
             set
             {
                 _countpass = value;
-                OnPropertyChanged("CountPass");
+                OnPropertyChanged("CountOK");
             }
         }
         public int CountNG

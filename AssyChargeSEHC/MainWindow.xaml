@@ -110,15 +110,17 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="Model Select:" Style="{StaticResource labelStyle}"/>
                     <ComboBox Name="cbbModelList" Grid.Column="1" Margin="2 0 0 0" FontSize="20" FontWeight="Bold"
-                              VerticalContentAlignment="Center" PreviewMouseDown="cbbModelList_PreviewMouseDown"/>
+                              VerticalContentAlignment="Center" PreviewMouseDown="cbbModelList_PreviewMouseDown"
+                              SelectionChanged="cbbModelList_SelectionChanged"/>
                 </Grid>
                 <Grid Grid.Column="1" Margin="5 0 0 0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Model Type:" Style="{StaticResource labelStyle}"/>
-                    <Label Grid.Column="1" Margin="3 0 0 0" Style="{StaticResource labelStyle}" Background="White"/>
+                    <Label Content="Model Info:" Style="{StaticResource labelStyle}"/>
+                    <Label Grid.Column="1" Margin="3 0 0 0" Style="{StaticResource labelStyle}" Background="White"
+                           Name="lbModelInfo" Foreground="Black" HorizontalContentAlignment="Left" Padding="10 0 0 0"/>
                 </Grid>
             </Grid>
             <TabControl x:Name="tabControlMain" Margin="5 5 0 0" Grid.Row="1" Grid.Column="0">
@@ -359,17 +361,17 @@
                 </Grid.RowDefinitions>
                 <!--Label tieu de-->
                 <Label Style="{StaticResource labelStyle}" Content="Counter"/>
-                <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource labelStyle}" Content="PASS"/>
+                <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource labelStyle}" Content="OK"/>
                 <Label Grid.Row="0" Grid.Column="2" Style="{StaticResource labelStyle}" Content="NG"/>
                 <Label Grid.Row="0" Grid.Column="3" Style="{StaticResource labelStyle}" Content="Total"/>
                 <!--Label gia tri-->
                 <Button Grid.Row="1" Content="RESET" FontSize="32" FontWeight="Bold" BorderBrush="Black" BorderThickness="0.8" Name="buttonReset" Click="buttonReset_Click"/>
-                <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource labelStyle}" Background="White" Foreground="#FF196819"
-                       FontSize="36" Content="{Binding CountPass, UpdateSourceTrigger=PropertyChanged}" Name="labelPass"/>
-                <Label Grid.Row="1" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" Foreground="#FFCD2323"
-                       FontSize="36" Content="{Binding CountNG, UpdateSourceTrigger=PropertyChanged}" Name="labelNG"/>
-                <Label Grid.Row="1" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" Foreground="Black"
-                       FontSize="36" Content="{Binding CountTotal, UpdateSourceTrigger=PropertyChanged}" Name="labelTotal"/>
+                <Label Grid.Row="1" Grid.Column="1" x:Name="labelOK" Style="{StaticResource labelStyle}" Background="White" Foreground="#FF196819"
+                       FontSize="36" Content="{Binding CountOK, UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Grid.Row="1" Grid.Column="2" x:Name="labelNG" Style="{StaticResource labelStyle}" Background="White" Foreground="#FFCD2323"
+                       FontSize="36" Content="{Binding CountNG, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Grid.Row="1" Grid.Column="3" x:Name="labelTotal" Style="{StaticResource labelStyle}" Background="White" Foreground="Black"
+                       FontSize="36" Content="{Binding CountTotal, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
             <Grid Grid.Row="1" Margin="0 5 0 5">
                 <Grid.ColumnDefinitions>

@@ -54,8 +54,6 @@ namespace AssyChargeSEHC
         const string PrinterIPAddress = "192.168.0.5";
         const string PLCIPAddress = "192.168.0.10";
 
-        int countPass, countNG, total;
-
         uint _StartProgram;
         uint _currentProgram = 0;
 
@@ -112,7 +110,7 @@ namespace AssyChargeSEHC
 
             this.labelFinalJudgement.DataContext = MeasurementValues.Instance();
 
-            this.labelPass.DataContext = Common.Instance();
+            this.labelOK.DataContext = Common.Instance();
             this.labelNG.DataContext = Common.Instance();
             this.labelTotal.DataContext = Common.Instance();
 
@@ -142,7 +140,7 @@ namespace AssyChargeSEHC
         }
         void Fake_Run()
         {
-            if(!_flag)
+            if (!_flag)
             {
                 switch (_StartProgram)
                 {
@@ -156,7 +154,7 @@ namespace AssyChargeSEHC
 
                         MeasurementValues.Instance().Current = (float)0.998;
                         MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
-                        
+
                         break;
                     case 3:
                         MeasurementValues.Instance().IRLeft = "L011X1";
@@ -169,23 +167,20 @@ namespace AssyChargeSEHC
                         if (MeasurementValues.Instance().FinalJudgement())
                         {
                             MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.OK;
-                            countPass++;
-                            labelPass.Content = countPass.ToString();
+                            Common.Instance().CountOK += 1;
                         }
-                        Common.Instance().CountTotal = Common.Instance().CountTotal + 1;
+                        Common.Instance().CountTotal += 1;
                         Uri fileUri = new Uri(Environment.CurrentDirectory + "\\MyQRCode.png");
                         imgQRCode.Source = new BitmapImage(fileUri);
                         if (_myDataTemplateWorkSheet != null)
                         {
-                            _CountDataInTemplate += 1;
+                            _CountDataInTemplate = 1;
                             var tempRange = (Excel.Range)_myDataTemplateWorkSheet.Cells[_CountDataInTemplate, 1];
                             ExcelTemplateInput(tempRange);
                         }
                         _flag = true;
                         break;
                     case 4:
-                        total++;
-                        labelTotal.Content = total.ToString();
                         Reset();
                         break;
                     default:
@@ -218,23 +213,20 @@ namespace AssyChargeSEHC
                         if (!MeasurementValues.Instance().FinalJudgement())
                         {
                             MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.NG;
-                            countNG++;
-                            labelNG.Content = countNG.ToString();
+                            Common.Instance().CountNG += 1;
                         }
-                        Common.Instance().CountTotal = Common.Instance().CountTotal + 1;
+                        Common.Instance().CountTotal += 1;
                         Uri fileUri = new Uri(Environment.CurrentDirectory + "\\MyQRCode.png");
                         imgQRCode.Source = new BitmapImage(fileUri);
                         if (_myDataTemplateWorkSheet != null)
                         {
-                            _CountDataInTemplate += 1;
+                            _CountDataInTemplate = 1;
                             var tempRange = (Excel.Range)_myDataTemplateWorkSheet.Cells[_CountDataInTemplate, 1];
                             ExcelTemplateInput(tempRange);
                         }
                         _flag = false;
                         break;
                     case 4:
-                        total++;
-                        labelTotal.Content = total.ToString();
                         Reset();
                         break;
                     default:
@@ -520,7 +512,7 @@ namespace AssyChargeSEHC
         void OpenExcelResultFile()
         {
             string currentDir = Environment.CurrentDirectory + "\\" + "ExcelTemplate.xlsx";
-            string currentDailyData = "D:\\Data\\ExcelFile\\" + DateTime.Now.ToString("dd-MM-yyyy") + "_DataCollect" + ".xlsx";
+            string currentDailyData = "F:\\Data\\ExcelFile\\" + DateTime.Now.ToString("dd-MM-yyyy") + "_DataCollect" + ".xlsx";
             if (!File.Exists(currentDailyData))
             {
                 File.Copy(@currentDir, @currentDailyData);
@@ -611,7 +603,7 @@ namespace AssyChargeSEHC
                 tempRange = tempRange.Offset[0, 1];
             });
         }
-        
+
         private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
             //Open COM read Voltage and Current
@@ -651,7 +643,7 @@ namespace AssyChargeSEHC
             _StartProgram++;
             if (_StartProgram > 4)
                 _StartProgram = 0;
-                Fake_Run();
+            Fake_Run();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -709,6 +701,16 @@ namespace AssyChargeSEHC
         private void Event_PushF4(object sender, ExecutedRoutedEventArgs e)
         {
 
+        }
+
+        private void cbbModelList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            using (var dao = new UserDAO())
+            {
+                var lst = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
+                lbModelInfo.Content = lst[0].ModelName + "/" + lst[0].StandbyVoltageMin + "/" + lst[0].StandbyVoltageMax + "/" + lst[0].ChargingVoltageMin
+                     + "/" + lst[0].ChargingVoltageMax + "/" + lst[0].ChargingCurrentMin + "/" + lst[0].ChargingCurrentMax;
+            }
         }
     }
 }

@@ -24,7 +24,11 @@ namespace AssyChargeSEHC.DAO
         /// <returns></returns>
         public List<string> GetModelList()
         {
-            return db.ModelList.Select(x => x.Model).ToList();
+            return db.ModelList.Select(x => x.ModelName).ToList();
+        }
+        public List<ModelList> GetDefaultValues(string modelName)
+        {
+            return db.ModelList.Where(x => x.ModelName == modelName).ToList();
         }
         /// <summary>
         /// get Result List
@@ -34,9 +38,18 @@ namespace AssyChargeSEHC.DAO
         {
             return db.ResultList.ToList();
         }
-        public void AddModel(string model)
+        public void AddModel(string modelName, string StVolMin, string StVolMax, string ChVolMin, string ChVolMax, string ChCurMin, string ChCurMax)
         {
-            var md = new ModelList() { Model = model };
+            var md = new ModelList()
+            {
+                ModelName = modelName,
+                StandbyVoltageMin = StVolMin,
+                StandbyVoltageMax = StVolMax,
+                ChargingVoltageMin = ChVolMin,
+                ChargingVoltageMax = ChVolMax,
+                ChargingCurrentMin = ChCurMin,
+                ChargingCurrentMax = ChCurMax
+            };
             db.Add(md);
             db.SaveChanges();
         }

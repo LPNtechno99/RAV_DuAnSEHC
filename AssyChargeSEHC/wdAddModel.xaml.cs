@@ -25,19 +25,36 @@ namespace AssyChargeSEHC
         {
             InitializeComponent();
 
-            tbAddModel.Focus();
         }
-
-        private void TextBox_KeyUp(object sender, KeyEventArgs e)
+        bool CheckNull()
         {
-            if (e.Key == Key.Enter)
+            if (tbModelName.Text.Trim() != "" && tbStVolMin.Text.Trim() != "" && tbStVolMax.Text.Trim() != "" && tbChVolMin.Text.Trim() != "" &&
+                tbChVolMax.Text.Trim() != "" && tbChCurMin.Text.Trim() != "" && tbChCurMax.Text.Trim() != "")
+                return true;
+            else
             {
-                using (var db = new UserDAO())
-                {
-                    db.AddModel(tbAddModel.Text.Trim());
-                }
-                this.Close();
+                return false;
             }
+        }
+        private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new UserDAO())
+            {
+                if (CheckNull())
+                {
+                    db.AddModel(tbModelName.Text.Trim(), tbStVolMin.Text.Trim(), tbStVolMax.Text.Trim(), tbChVolMin.Text.Trim()
+                        , tbChVolMax.Text.Trim(), tbChCurMin.Text.Trim(), tbChCurMax.Text.Trim());
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("There must be no empty fields");
+                }
+            }
+        }
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
