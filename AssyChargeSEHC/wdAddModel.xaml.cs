@@ -68,10 +68,6 @@ namespace AssyChargeSEHC
                         string[] temp = new string[7] { tbModelName.Text.Trim(), tbStVolMin.Text.Trim(), tbStVolMax.Text.Trim(), tbChVolMin.Text.Trim()
                             , tbChVolMax.Text.Trim(), tbChCurMin.Text.Trim(), tbChCurMax.Text.Trim()};
                         db.EditModel(DefaultValues.Instance().ModelName, temp);
-                        if (EvAddEditDone != null)
-                        {
-                            EvAddEditDone.Invoke();
-                        }
                         this.Close();
                     }
                     else
@@ -97,6 +93,14 @@ namespace AssyChargeSEHC
                 tbChVolMax.Text = DefaultValues.Instance().ChargingVoltageMax;
                 tbChCurMin.Text = DefaultValues.Instance().ChargingCurrentMin;
                 tbChCurMax.Text = DefaultValues.Instance().ChargingCurrentMax;
+            }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (EvAddEditDone != null)
+            {
+                EvAddEditDone.Invoke();
             }
         }
     }

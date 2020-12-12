@@ -628,28 +628,28 @@ namespace AssyChargeSEHC
             Dispatcher.Invoke(() =>
             {
                 // ID
-                tempRange.Value2 = "1";
+                tempRange.Value2 = DefaultValues.Instance().ID;
                 tempRange = tempRange.Offset[0, 1];
                 // Ngay Thang
                 tempRange.Value2 = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
                 tempRange = tempRange.Offset[0, 1];
                 // Standby VolMin
-                tempRange.Value2 = "7";
+                tempRange.Value2 = DefaultValues.Instance().StandbyVoltageMin;
                 tempRange = tempRange.Offset[0, 1];
                 // Standby VolMax
-                tempRange.Value2 = "9";
+                tempRange.Value2 = DefaultValues.Instance().StandbyVoltageMax;
                 tempRange = tempRange.Offset[0, 1];
                 // Charging VolMin
-                tempRange.Value2 = "24.0";
+                tempRange.Value2 = DefaultValues.Instance().ChargingVoltageMin;
                 tempRange = tempRange.Offset[0, 1];
                 // Charging VolMax
-                tempRange.Value2 = "25.2";
+                tempRange.Value2 = DefaultValues.Instance().ChargingVoltageMax;
                 tempRange = tempRange.Offset[0, 1];
                 // Charging CurMin
-                tempRange.Value2 = "1.45";
+                tempRange.Value2 = DefaultValues.Instance().ChargingCurrentMin;
                 tempRange = tempRange.Offset[0, 1];
                 // Charging CurMax
-                tempRange.Value2 = "1.55";
+                tempRange.Value2 = DefaultValues.Instance().ChargingCurrentMax;
                 tempRange = tempRange.Offset[0, 1];
                 //Standby IRLeft
                 tempRange.Value2 = "L011X1";
@@ -661,22 +661,22 @@ namespace AssyChargeSEHC
                 tempRange.Value2 = "L0111X";
                 tempRange = tempRange.Offset[0, 1];
                 // Voltage Measurement Value
-                tempRange.Value2 = "24.3";
+                tempRange.Value2 = MeasurementValues.Instance().Voltage;
                 tempRange = tempRange.Offset[0, 1];
                 // Current Measurement Value
-                tempRange.Value2 = "1.52";
+                tempRange.Value2 = MeasurementValues.Instance().Current;
                 tempRange = tempRange.Offset[0, 1];
                 // IRLeft Measurement Value
-                tempRange.Value2 = "L011X1";
+                tempRange.Value2 = MeasurementValues.Instance().IRLeft;
                 tempRange = tempRange.Offset[0, 1];
                 // IRCenter Measurement Value
-                tempRange.Value2 = "L111XX";
+                tempRange.Value2 = MeasurementValues.Instance().IRCenter;
                 tempRange = tempRange.Offset[0, 1];
                 // IRRight Measurement Value
-                tempRange.Value2 = "L0111X";
+                tempRange.Value2 = MeasurementValues.Instance().IRRight;
                 tempRange = tempRange.Offset[0, 1];
                 // Judge
-                tempRange.Value2 = "OK";
+                tempRange.Value2 = MeasurementValues.Instance().JudgeFinal;
                 tempRange = tempRange.Offset[0, 1];
             });
         }
@@ -782,14 +782,14 @@ namespace AssyChargeSEHC
             {
 
                 cbbModelList.ItemsSource = dao.GetModelList();
-                var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
-                DefaultValues.Instance().ModelName = _s[0].ModelName;
-                DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
-                DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
-                DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
-                DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
-                DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
-                DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
+                //var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
+                //DefaultValues.Instance().ModelName = _s[0].ModelName;
+                //DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
+                //DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
+                //DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
+                //DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
+                //DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
+                //DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
             }
         }
         private void cbbModelList_PreviewMouseDown(object sender, MouseButtonEventArgs e)
