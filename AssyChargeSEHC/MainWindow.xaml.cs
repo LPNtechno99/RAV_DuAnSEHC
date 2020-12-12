@@ -57,6 +57,8 @@ namespace AssyChargeSEHC
         uint _StartProgram;
         uint _currentProgram = 0;
 
+        float[] _arrfl = new float[18] { 8.5f, 4.3f, 3.3f, 2.0f, 1.0f, 1.7f, 8.5f, 4.4f, 3.3f, 2.2f, 0.9f, 1.6f, 8.5f, 4.3f, 3.1f, 2.3f, 1.1f, 1.6f };
+        float realtime;
         public MainWindow()
         {
             InitializeComponent();
@@ -72,6 +74,15 @@ namespace AssyChargeSEHC
             paneLeft.Title.Text = "IR Left";
             paneLeft.XAxis.Title.Text = "Time (ms)";
             paneLeft.YAxis.Title.Text = "Value";
+            paneLeft.XAxis.Scale.Min = 0;
+            paneLeft.XAxis.Scale.Max = 66;
+            paneLeft.XAxis.Scale.MinorStep = 0.5;
+            paneLeft.XAxis.Scale.MajorStep = 5;
+            paneLeft.YAxis.Scale.Min = -0.2;
+            paneLeft.YAxis.Scale.Max = 1.2;
+            RollingPointPairList list_left = new RollingPointPairList(60000);
+            LineItem curve_left = paneLeft.AddCurve("Pulse", list_left, System.Drawing.Color.Green, SymbolType.None);
+            graphIRLeft.AxisChange();
 
             //setup GraphCenter
             GraphPane paneCenter = graphIRCenter.GraphPane;
@@ -81,6 +92,15 @@ namespace AssyChargeSEHC
             paneCenter.Title.Text = "IR Center";
             paneCenter.XAxis.Title.Text = "Time (ms)";
             paneCenter.YAxis.Title.Text = "Value";
+            paneCenter.XAxis.Scale.Min = 0;
+            paneCenter.XAxis.Scale.Max = 66;
+            paneCenter.XAxis.Scale.MinorStep = 0.5;
+            paneCenter.XAxis.Scale.MajorStep = 5;
+            paneCenter.YAxis.Scale.Min = -0.2;
+            paneCenter.YAxis.Scale.Max = 1.2;
+            RollingPointPairList list_center = new RollingPointPairList(60000);
+            LineItem curve_center = paneCenter.AddCurve("Pulse", list_center, System.Drawing.Color.Green, SymbolType.None);
+            graphIRCenter.AxisChange();
 
             //setup Graphright
             GraphPane paneRight = graphIRRight.GraphPane;
@@ -90,6 +110,15 @@ namespace AssyChargeSEHC
             paneRight.Title.Text = "IR Right";
             paneRight.XAxis.Title.Text = "Time (ms)";
             paneRight.YAxis.Title.Text = "Value";
+            paneRight.XAxis.Scale.Min = 0;
+            paneRight.XAxis.Scale.Max = 66;
+            paneRight.XAxis.Scale.MinorStep = 0.5;
+            paneRight.XAxis.Scale.MajorStep = 5;
+            paneRight.YAxis.Scale.Min = -0.2;
+            paneRight.YAxis.Scale.Max = 1.2;
+            RollingPointPairList list_right = new RollingPointPairList(60000);
+            LineItem curve_right = paneRight.AddCurve("Pulse", list_right, System.Drawing.Color.Green, SymbolType.None);
+            graphIRRight.AxisChange();
 
 
             //Binding
@@ -114,8 +143,45 @@ namespace AssyChargeSEHC
             this.labelNG.DataContext = Common.Instance();
             this.labelTotal.DataContext = Common.Instance();
 
+            this.lbStVolMin.DataContext = DefaultValues.Instance();
+            this.lbStVolMax.DataContext = DefaultValues.Instance();
+            this.lbChVolMin.DataContext = DefaultValues.Instance();
+            this.lbChVolMax.DataContext = DefaultValues.Instance();
+            this.lbChCurMin.DataContext = DefaultValues.Instance();
+            this.lbChCurMax.DataContext = DefaultValues.Instance();
+
             StartAppExcel();
             //InitializeCOM_PLC();
+        }
+        void DrawGraph(float[] arr)
+        {
+            if (graphIRLeft.GraphPane.CurveList.Count <= 0)
+                return;
+
+            LineItem curve = graphIRLeft.GraphPane.CurveList[0] as LineItem;
+
+            if (curve == null)
+                return;
+
+            IPointListEdit list = curve.Points as IPointListEdit;
+
+            if (list == null)
+                return;
+            list.Add(realtime, 0.0f);
+            for (int i = 0; i < arr.Length; i++)
+            {
+                realtime = (realtime + arr[i]) - 0.5f;
+                list.Add(realtime, 0.0f);
+                list.Add(realtime, 1.0f);
+                list.Add(realtime + 0.5f, 1.0f);
+                list.Add(realtime + 0.5f, 0.0f);
+                realtime += 0.5f;
+            }
+            list.Add(realtime + 8.5f, 0.0f);
+            graphIRLeft.AxisChange();
+            graphIRLeft.Invalidate();
+            graphIRLeft.Refresh();
+
         }
         bool _flag;
         void Reset()
@@ -478,6 +544,17 @@ namespace AssyChargeSEHC
                 cbbModelList.ItemsSource = dao.GetModelList();
                 dgResultList.ItemsSource = dao.GetResultList();
 
+                cbbModelList.SelectedIndex = 0;
+
+                var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
+                DefaultValues.Instance().ModelName = _s[0].ModelName;
+                DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
+                DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
+                DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
+                DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
+                DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
+                DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
+
                 List<ResultList> lst = dgResultList.ItemsSource as List<ResultList>;
                 for (int i = 0; i < lst.Count; i++)
                 {
@@ -640,10 +717,11 @@ namespace AssyChargeSEHC
             //string temp2 = temp.Substring(temp.IndexOf("IC") + 3, temp.IndexOf("IL") - 3);
             //string temp3 = temp.Substring(temp.IndexOf("IL") + 3, temp.IndexOf("IE") - 3);
             //MessageBox.Show(temp1 + "\n" + temp2 + "\n" + temp3);
-            _StartProgram++;
-            if (_StartProgram > 4)
-                _StartProgram = 0;
-            Fake_Run();
+            //_StartProgram++;
+            //if (_StartProgram > 4)
+            //    _StartProgram = 0;
+            //Fake_Run();
+            DrawGraph(_arrfl);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -678,12 +756,42 @@ namespace AssyChargeSEHC
             Process.Start("Explorer.exe", "D:\\Data\\ExcelFile");
         }
 
-        private void mnuAdd_Click(object sender, RoutedEventArgs e)
+        private void mnuAddEdit_Click(object sender, RoutedEventArgs e)
         {
-            wdAddModel wd = new wdAddModel();
-            wd.ShowDialog();
+            var x = sender as MenuItem;
+            if (x.Tag.ToString() == "1")
+            {
+                wdAddModel wd = new wdAddModel();
+                wd.lbAddEdit.Content = "Add New Model";
+                wd._Mode = wdAddModel.Mode.Add;
+                wd.ShowDialog();
+            }
+            else if (x.Tag.ToString() == "2")
+            {
+                wdAddModel wd = new wdAddModel();
+                wd.EvAddEditDone += Wd_EvAddEditDone;
+                wd.lbAddEdit.Content = "Edit Model";
+                wd._Mode = wdAddModel.Mode.Edit;
+                wd.ShowDialog();
+            }
         }
 
+        private void Wd_EvAddEditDone()
+        {
+            using (var dao = new UserDAO())
+            {
+
+                cbbModelList.ItemsSource = dao.GetModelList();
+                var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
+                DefaultValues.Instance().ModelName = _s[0].ModelName;
+                DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
+                DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
+                DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
+                DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
+                DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
+                DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
+            }
+        }
         private void cbbModelList_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             using (var dao = new UserDAO())
@@ -700,9 +808,12 @@ namespace AssyChargeSEHC
 
         private void Event_PushF4(object sender, ExecutedRoutedEventArgs e)
         {
+            mnuAddEdit_Click(null, null);
+        }
+        private void Event_PushF5(object sender, ExecutedRoutedEventArgs e)
+        {
 
         }
-
         private void cbbModelList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             using (var dao = new UserDAO())
@@ -710,7 +821,21 @@ namespace AssyChargeSEHC
                 var lst = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
                 lbModelInfo.Content = lst[0].ModelName + "/" + lst[0].StandbyVoltageMin + "/" + lst[0].StandbyVoltageMax + "/" + lst[0].ChargingVoltageMin
                      + "/" + lst[0].ChargingVoltageMax + "/" + lst[0].ChargingCurrentMin + "/" + lst[0].ChargingCurrentMax;
+
+                var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
+                DefaultValues.Instance().ModelName = _s[0].ModelName;
+                DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
+                DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
+                DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
+                DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
+                DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
+                DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
             }
+        }
+
+        private void mnuEdit_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

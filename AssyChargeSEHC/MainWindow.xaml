@@ -20,6 +20,7 @@
         <RoutedUICommand x:Key="myCommandF2" Text="text"/>
         <RoutedUICommand x:Key="myCommandF3" Text="text"/>
         <RoutedUICommand x:Key="myCommandF4" Text="text"/>
+        <RoutedUICommand x:Key="myCommandF5" Text="text"/>
         <!--Style-->
         <Style x:Key="labelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="20"/>
@@ -38,6 +39,7 @@
         <KeyBinding Key="F2" Command="{StaticResource myCommandF2}"/>
         <KeyBinding Key="F3" Command="{StaticResource myCommandF3}"/>
         <KeyBinding Key="F4" Command="{StaticResource myCommandF4}"/>
+        <KeyBinding Key="F5" Command="{StaticResource myCommandF5}"/>
     </Window.InputBindings>
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource myCommandEsc}" Executed="CommandBinding_Executed"/>
@@ -45,6 +47,7 @@
         <CommandBinding Command="{StaticResource myCommandF2}" Executed="Event_PushF2"/>
         <CommandBinding Command="{StaticResource myCommandF3}" Executed="Event_PushF3"/>
         <CommandBinding Command="{StaticResource myCommandF4}" Executed="Event_PushF4"/>
+        <CommandBinding Command="{StaticResource myCommandF5}" Executed="Event_PushF5"/>
     </Window.CommandBindings>
     <Grid Background="White">
         <!--<WindowsFormsHost HorizontalAlignment="Left" Height="219" Margin="132,35,0,0" VerticalAlignment="Top" Width="545">
@@ -66,7 +69,7 @@
                     <TextBlock Margin="20 0 0 0" Text="SAMSUNG ASSY CHARGE"/>
                 </StackPanel>
             </Label>
-            <Menu Grid.Column="1" VerticalAlignment="Center">
+            <Menu Grid.Column="1" VerticalContentAlignment="Center">
                 <MenuItem FontSize="20" FontWeight="Bold" Margin="20 0 0 0">
                     <MenuItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -74,9 +77,9 @@
                             <TextBlock Margin="5 0 0 0" Text="Model"/>
                         </StackPanel>
                     </MenuItem.Header>
-                    <MenuItem Header="Edit" FontSize="18" FontWeight="Bold"/>
+                    <MenuItem Header="Add" FontSize="18" FontWeight="Bold" Click="mnuAddEdit_Click" Tag="1"/>
                     <Separator/>
-                    <MenuItem Name="mnuAdd" Header="Add" FontSize="18" FontWeight="Bold" Click="mnuAdd_Click"/>
+                    <MenuItem Header="Edit" FontSize="18" FontWeight="Bold" Click="mnuAddEdit_Click" Tag="2"/>
                 </MenuItem>
                 <MenuItem FontSize="20" FontWeight="Bold">
                     <MenuItem.Header>
@@ -162,15 +165,21 @@
                         <Label Grid.Row="6" Grid.Column="1" Style="{StaticResource labelStyle}" Content="Voltage (V)" FontSize="16" Background="#FF59B465"/>
                         <Label Grid.Row="7" Grid.Column="1" Style="{StaticResource labelStyle}" Content="Current (A)" FontSize="16" Background="#FF59B465"/>
                         <!--Label Gia tri mac dinh-->
-                        <Label Grid.Row="2" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="7"/>
-                        <Label Grid.Row="2" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="9"/>
+                        <Label Grid.Row="2" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" 
+                               Foreground="Black" Content="{Binding StandbyVoltageMin, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbStVolMin"/>
+                        <Label Grid.Row="2" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" 
+                               Foreground="Black" Content="{Binding StandbyVoltageMax, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbStVolMax"/>
                         <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 0 1 1 X 1"/>
                         <Label Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 1 1 1 X X"/>
                         <Label Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 0 1 1 1 X"/>
-                        <Label Grid.Row="6" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="24.0"/>
-                        <Label Grid.Row="6" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="25.2"/>
-                        <Label Grid.Row="7" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="1.45"/>
-                        <Label Grid.Row="7" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="1.55"/>
+                        <Label Grid.Row="6" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" 
+                               Foreground="Black" Content="{Binding ChargingVoltageMin, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbChVolMin"/>
+                        <Label Grid.Row="6" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" 
+                               Foreground="Black" Content="{Binding ChargingVoltageMax, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbChVolMax"/>
+                        <Label Grid.Row="7" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" 
+                               Foreground="Black" Content="{Binding ChargingCurrentMin, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.00" Name="lbChCurMin"/>
+                        <Label Grid.Row="7" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" 
+                               Foreground="Black" Content="{Binding ChargingCurrentMax, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.00" Name="lbChCurMax"/>
                         <!--Label Gia tri do-->
                         <Label Name="labelVoltageStandby" Grid.Row="2" Grid.Column="4" Style="{StaticResource labelStyle}" Background="{Binding JudgeVoltageStandby, Converter={StaticResource ColorChangeOKNG}}" 
                                Foreground="Black" Content="{Binding VoltageStandby,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0"/>
@@ -380,12 +389,14 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Style="{StaticResource labelStyle}" Content="F1 - Test Status/Result List"/>
                 <Label Grid.Column="1" Style="{StaticResource labelStyle}" Content="F2 - Open Excel"/>
                 <Label Grid.Column="2" Style="{StaticResource labelStyle}" Content="F3 - Check QRCode"/>
-                <Label Grid.Column="3" Style="{StaticResource labelStyle}" Content="F4 - Logs"/>
-                <Label Grid.Column="4" Style="{StaticResource labelStyle}" Content="Esc - Exit"/>
+                <Label Grid.Column="3" Style="{StaticResource labelStyle}" Content="F4 - Add/Edit Model"/>
+                <Label Grid.Column="4" Style="{StaticResource labelStyle}" Content="F5 - Logs"/>
+                <Label Grid.Column="5" Style="{StaticResource labelStyle}" Content="Esc - Exit"/>
             </Grid>
         </Grid>
     </Grid>

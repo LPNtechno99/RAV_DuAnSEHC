@@ -26,6 +26,12 @@ namespace AssyChargeSEHC.DAO
         {
             return db.ModelList.Select(x => x.ModelName).ToList();
         }
+
+        /// <summary>
+        /// lấy thông số mặc định
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <returns></returns>
         public List<ModelList> GetDefaultValues(string modelName)
         {
             return db.ModelList.Where(x => x.ModelName == modelName).ToList();
@@ -38,6 +44,16 @@ namespace AssyChargeSEHC.DAO
         {
             return db.ResultList.ToList();
         }
+        /// <summary>
+        /// Thêm mới một dữ liệu mặc định
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <param name="StVolMin"></param>
+        /// <param name="StVolMax"></param>
+        /// <param name="ChVolMin"></param>
+        /// <param name="ChVolMax"></param>
+        /// <param name="ChCurMin"></param>
+        /// <param name="ChCurMax"></param>
         public void AddModel(string modelName, string StVolMin, string StVolMax, string ChVolMin, string ChVolMax, string ChCurMin, string ChCurMax)
         {
             var md = new ModelList()
@@ -51,6 +67,18 @@ namespace AssyChargeSEHC.DAO
                 ChargingCurrentMax = ChCurMax
             };
             db.Add(md);
+            db.SaveChanges();
+        }
+        public void EditModel(string modelName, string[] arrModel)
+        {
+            var existing = db.ModelList.Where(x => x.ModelName == modelName).ToArray();
+            existing[0].ModelName = arrModel[0];
+            existing[0].StandbyVoltageMin = arrModel[1];
+            existing[0].StandbyVoltageMax = arrModel[2];
+            existing[0].ChargingVoltageMin = arrModel[3];
+            existing[0].ChargingVoltageMax = arrModel[4];
+            existing[0].ChargingCurrentMin = arrModel[5];
+            existing[0].ChargingCurrentMax = arrModel[6];
             db.SaveChanges();
         }
     }

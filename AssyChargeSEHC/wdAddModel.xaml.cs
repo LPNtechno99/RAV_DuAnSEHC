@@ -16,15 +16,23 @@ using AssyChargeSEHC.DAO;
 
 namespace AssyChargeSEHC
 {
+
     /// <summary>
     /// Interaction logic for wdAddModel.xaml
     /// </summary>
     public partial class wdAddModel : Window
     {
+        public enum Mode { Add, Edit }
+        public Mode _Mode
+        {
+            get; set;
+        }
+
+        public delegate void dlgDone();
+        public event dlgDone EvAddEditDone;
         public wdAddModel()
         {
             InitializeComponent();
-
         }
         bool CheckNull()
         {
@@ -40,21 +48,56 @@ namespace AssyChargeSEHC
         {
             using (var db = new UserDAO())
             {
-                if (CheckNull())
+                if (_Mode == Mode.Add)
                 {
-                    db.AddModel(tbModelName.Text.Trim(), tbStVolMin.Text.Trim(), tbStVolMax.Text.Trim(), tbChVolMin.Text.Trim()
-                        , tbChVolMax.Text.Trim(), tbChCurMin.Text.Trim(), tbChCurMax.Text.Trim());
-                    this.Close();
+                    if (CheckNull())
+                    {
+                        db.AddModel(tbModelName.Text.Trim(), tbStVolMin.Text.Trim(), tbStVolMax.Text.Trim(), tbChVolMin.Text.Trim()
+                            , tbChVolMax.Text.Trim(), tbChCurMin.Text.Trim(), tbChCurMax.Text.Trim());
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("There must be no empty fields");
+                    }
                 }
-                else
+                else if (_Mode == Mode.Edit)
                 {
-                    MessageBox.Show("There must be no empty fields");
+                    if (CheckNull())
+                    {
+                        string[] temp = new string[7] { tbModelName.Text.Trim(), tbStVolMin.Text.Trim(), tbStVolMax.Text.Trim(), tbChVolMin.Text.Trim()
+                            , tbChVolMax.Text.Trim(), tbChCurMin.Text.Trim(), tbChCurMax.Text.Trim()};
+                        db.EditModel(DefaultValues.Instance().ModelName, temp);
+                        if (EvAddEditDone != null)
+                        {
+                            EvAddEditDone.Invoke();
+                        }
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("There must be no empty fields");
+                    }
                 }
             }
         }
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_Mode == Mode.Edit)
+            {
+                tbModelName.Text = DefaultValues.Instance().ModelName;
+                tbStVolMin.Text = DefaultValues.Instance().StandbyVoltageMin;
+                tbStVolMax.Text = DefaultValues.Instance().StandbyVoltageMax;
+                tbChVolMin.Text = DefaultValues.Instance().ChargingVoltageMin;
+                tbChVolMax.Text = DefaultValues.Instance().ChargingVoltageMax;
+                tbChCurMin.Text = DefaultValues.Instance().ChargingCurrentMin;
+                tbChCurMax.Text = DefaultValues.Instance().ChargingCurrentMax;
+            }
         }
     }
 }
