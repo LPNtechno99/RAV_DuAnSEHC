@@ -95,8 +95,8 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("ChargingCurrentMax");
             }
         }
-        public string IRLeft { get; set; } = "L011X1";
+        public string IRLeft { get; set; } = "L0111X";
         public string IRCenter { get; set; } = "L111XX";
-        public string IRRight { get; set; } = "L0111X";
+        public string IRRight { get; set; } = "L011X1";
     }
 }

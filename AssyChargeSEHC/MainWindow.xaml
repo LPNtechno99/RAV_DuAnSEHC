@@ -169,9 +169,9 @@
                                Foreground="Black" Content="{Binding StandbyVoltageMin, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbStVolMin"/>
                         <Label Grid.Row="2" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" 
                                Foreground="Black" Content="{Binding StandbyVoltageMax, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbStVolMax"/>
-                        <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 0 1 1 X 1"/>
+                        <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 0 1 1 1 X"/>
                         <Label Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 1 1 1 X X"/>
-                        <Label Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 0 1 1 1 X"/>
+                        <Label Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Background="White" Foreground="Black" Content="L 0 1 1 X 1"/>
                         <Label Grid.Row="6" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" 
                                Foreground="Black" Content="{Binding ChargingVoltageMin, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbChVolMin"/>
                         <Label Grid.Row="6" Grid.Column="3" Style="{StaticResource labelStyle}" Background="White" 

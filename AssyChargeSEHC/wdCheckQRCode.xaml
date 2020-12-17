@@ -20,7 +20,7 @@
             <RowDefinition Height="1.2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="textboxData" TextWrapping="Wrap" FontSize="50" FontWeight="Bold" Text="ABC-xyz" Margin="10"/>
+        <TextBox x:Name="textboxData" TextWrapping="Wrap" FontSize="50" FontWeight="Bold" Text="" Margin="10"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
