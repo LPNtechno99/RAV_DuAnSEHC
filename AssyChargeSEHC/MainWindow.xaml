@@ -332,7 +332,7 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Label Style="{StaticResource labelStyle}" Content="Test Message"/>
-                    <RichTextBox Name="richMessage" Grid.Row="1" Background="{Binding}" 
+                    <TextBox Name="richMessage" Grid.Row="1" Background="{Binding}" 
                            Foreground="Black" FontSize="10" FontWeight="Bold" />
                 </Grid>
                 <Grid Grid.Row="2">
