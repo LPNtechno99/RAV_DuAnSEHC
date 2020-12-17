@@ -63,7 +63,7 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Style="{StaticResource labelStyle}" >
+            <Label Style="{StaticResource labelStyle}">
                 <StackPanel Orientation="Horizontal" >
                     <Image Source="/Images/samsung-128.png" Height="70" VerticalAlignment="Center"/>
                     <TextBlock Margin="20 0 0 0" Text="SAMSUNG ASSY CHARGE"/>
@@ -88,6 +88,14 @@
                             <TextBlock Margin="5 0 0 0" Text="Settings"/>
                         </StackPanel>
                     </MenuItem.Header>
+                    <MenuItem Header="Set Current" FontSize="18" FontWeight="Bold"
+                              Name="mnuSetCurrent" Click="mnuSetCurrent_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Logs" FontSize="18" FontWeight="Bold" Name="mnuLogs"
+                              Click="mnuLogs_Click"/>
+                    <Separator/>
+                    <MenuItem Header="LOGIN" FontSize="18" FontWeight="Bold"
+                              Name="mnuLogin" Click="mnuLogin_Click"/>
                 </MenuItem>
             </Menu>
         </Grid>

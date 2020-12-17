@@ -1,0 +1,17 @@
+﻿<Window x:Class="AssyChargeSEHC.wdSetCurrent"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AssyChargeSEHC"
+        mc:Ignorable="d"
+        Title="wdSetCurrent" Height="180" Width="350" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" Closing="Window_Closing">
+    <StackPanel Margin="10">
+        <Label Content="Set Current:" FontSize="16" FontWeight="Bold"/>
+        <TextBox x:Name="tbCurrent" Height="30" Margin="0 5 0 0" FontSize="18" FontWeight="Bold"
+                 TextAlignment="Right"/>
+        <Button x:Name="btnSave" Height="45" Margin="0 10 0 0" Content="Save"
+                FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center" Click="btnSave_Click"/>
+    </StackPanel>
+</Window>

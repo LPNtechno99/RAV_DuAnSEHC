@@ -26,8 +26,8 @@ namespace AssyChargeSEHC
     /// </summary>
     public partial class MainWindow : Window
     {
-        SerialPort COM_MeasureVolCur;
-        SerialPort COM_IR;
+        public static SerialPort COM_MeasureVolCur;
+        public static SerialPort COM_IR;
         EEIPClient eeipClient = null;
         Thread _threadPLC;
         Thread _threadProcess;
@@ -63,10 +63,6 @@ namespace AssyChargeSEHC
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timer.Tick += new EventHandler(Timer_Tick);
 
-            timerPLC.Interval = new TimeSpan(0, 0, 0, 0, 50);
-            timerPLC.Tick += TimerPLC_Tick;
-            //timerPLC.Start();
-
             InitialGraph();
             //Binding
 
@@ -97,10 +93,9 @@ namespace AssyChargeSEHC
             this.lbChCurMin.DataContext = DefaultValues.Instance();
             this.lbChCurMax.DataContext = DefaultValues.Instance();
 
-            StartAppExcel();
-            InitializeCOM_PLC();
+            //StartAppExcel();
+            //InitializeCOM_PLC();
 
-            COM_IR.Write("0");
         }
 
         void InitialGraph()
@@ -160,24 +155,6 @@ namespace AssyChargeSEHC
             LineItem curve_right = paneRight.AddCurve("Pulse", list_right, System.Drawing.Color.Green, SymbolType.None);
             //graphIRRight.AxisChange();
 
-        }
-        private void TimerPLC_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                //this.Dispatcher.Invoke(new EventHandler((obj, evt) =>
-                //{
-                byte[] result = eeipClient.AssemblyObject.getInstance(100);
-                _StartProgram = EEIPClient.ToUshort(result);
-                richMessage.Text = _StartProgram.ToString();
-                //label1.Text = string.Format("{0}", EEIPClient.ToUshort(result));
-                //}));
-            }
-            catch (Exception)
-            {
-
-            }
-            Thread.Sleep(5);
         }
 
         void DrawGraph(float[] arr, ZedGraphControl zedGraphControl)
@@ -246,6 +223,7 @@ namespace AssyChargeSEHC
                 MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.None;
 
                 MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.None;
+
                 imgQRCode.Source = null;
                 imgQRCode.InvalidateVisual();
 
@@ -254,6 +232,7 @@ namespace AssyChargeSEHC
                 _Done1 = false;
                 _Done2 = false;
                 _flagSetIni = false;
+
                 COM_MeasureVolCur.Close();
             }));
         }
@@ -371,7 +350,6 @@ namespace AssyChargeSEHC
                     case 0:
                         if (_flagSetIni)
                         {
-                            //COM_MeasureVolCur.DataReceived += COM_MeasureVolCur_DataReceived;
                             ResetBackDefault();
                             await Wait1Second();
                         }
@@ -388,7 +366,6 @@ namespace AssyChargeSEHC
                     case 2:
                         if (_Done1 == true && _flagStartRead == false)
                         {
-                            //COM_MeasureVolCur.DataReceived += COM_MeasureVolCur_DataReceived;
                             COM_MeasureVolCur.Write(_commandONOFF, 0, _commandONOFF.Length);
                             await Wait1Second();
                             COM_IR.Write("1");
@@ -445,7 +422,7 @@ namespace AssyChargeSEHC
                                 string s = Common.Instance().QRCodeString(DefaultValues.Instance().IRLeft, DefaultValues.Instance().IRCenter, DefaultValues.Instance().IRRight,
                                     MeasurementValues.Instance().VoltageStandby.ToString(), MeasurementValues.Instance().Voltage.ToString(), MeasurementValues.Instance().Current.ToString());
                                 await Wait1Second();
-                                SendZplOverTcp(PrinterIPAddress, s);
+                                SendZplOverTcp(PrinterIPAddress, DefaultValues.Instance().ModelName, s);
 
                                 Dispatcher.Invoke(new Action(() =>
                                 {
@@ -522,6 +499,8 @@ namespace AssyChargeSEHC
             COM_IR.DataReceived += COM_IR_DataReceived;
             COM_IR.Open();
 
+            COM_IR.Write("0");
+
             //Initialize eeip connect PLC Keyence
             eeipClient = new EEIPClient();
             eeipClient.IPAddress = PLCIPAddress;
@@ -542,7 +521,7 @@ namespace AssyChargeSEHC
         /// </summary>
         /// <param name="theIpAddress"></param>
         /// <param name="strPrint"></param>
-        private void SendZplOverTcp(string theIpAddress, string strPrint)
+        private void SendZplOverTcp(string theIpAddress, string modelCode, string strPrint)
         {
             // Instantiate connection for ZPL TCP port at given address
             Connection thePrinterConn = new TcpConnection(theIpAddress, TcpConnection.DEFAULT_ZPL_TCP_PORT);
@@ -553,7 +532,7 @@ namespace AssyChargeSEHC
                 thePrinterConn.Open();
 
                 // This example prints "This is a ZPL test." near the top of the label.
-                string zplData = "^XA^FO40,220^ADN,18,10^FD" + "HELLOkkkkkk" + "^FS^FO35,45^BQN,2,3,M,7^FD" + strPrint + "AC-42^FS^XZ";
+                string zplData = "^XA^FO40,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQN,2,3,M,7^FD" + strPrint + "AC-42^FS^XZ";
 
                 // Send the data to printer as a byte array.
                 thePrinterConn.Write(Encoding.UTF8.GetBytes(zplData));
@@ -984,7 +963,7 @@ namespace AssyChargeSEHC
             //{
 
             //}
-            SendZplOverTcp(PrinterIPAddress, "/20201217174700/A001-L0111X/A002-L111XX/A003-L011X1/A042-7.6-9.0-7.0/A027-24.6-25.8-24.0/A026-0.982-1.20-0.95/");
+            SendZplOverTcp(PrinterIPAddress, DefaultValues.Instance().ModelName, "/20201217174700/A001-L0111X/A002-L111XX/A003-L011X1/A042-7.6-9.0-7.0/A027-24.6-25.8-24.0/A026-0.982-1.20-0.95/");
             //DEMO1.4DEMO1.4/20201217174700/A001-L0111X/A002-L111XX/A003-L011X1/A042-7.6-9.0-7.0/A027-24.6-25.8-24.0/A026-0.982-1.20-0.95/
             //if (_myDataTemplateWorkSheet != null)
             //{
@@ -1043,11 +1022,19 @@ namespace AssyChargeSEHC
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            COM_IR.Write("0");
-            _threadPLC.Abort();
-            _threadProcess.Abort();
-            COM_MeasureVolCur.Close();
-            COM_IR.Close();
+            try
+            {
+                if (COM_IR.IsOpen)
+                    COM_IR.Write("0");
+                _threadPLC.Abort();
+                _threadProcess.Abort();
+                COM_MeasureVolCur.Close();
+                COM_IR.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             try
             {
                 var temp = _myExcel.Workbooks.Count;
@@ -1152,6 +1139,22 @@ namespace AssyChargeSEHC
                 DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
                 DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
             }
+        }
+
+        private void mnuSetCurrent_Click(object sender, RoutedEventArgs e)
+        {
+            wdSetCurrent wd = new wdSetCurrent();
+            wd.ShowDialog();
+        }
+
+        private void mnuLogin_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void mnuLogs_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void mnuEdit_Click(object sender, RoutedEventArgs e)
