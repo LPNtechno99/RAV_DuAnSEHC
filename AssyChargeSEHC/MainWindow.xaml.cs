@@ -31,15 +31,14 @@ namespace AssyChargeSEHC
         EEIPClient eeipClient = null;
         Thread _threadPLC;
         Thread _threadProcess;
-        DispatcherTimer timer = new DispatcherTimer();
-        DispatcherTimer timerPLC = new DispatcherTimer();
+        //DispatcherTimer timer = new DispatcherTimer();
+        //DispatcherTimer timerPLC = new DispatcherTimer();
 
         //Connect Excel
         Excel.Application _myExcel;
         Excel.Worksheet _myDataTemplateWorkSheet;
         int _CountDataInTemplate;
 
-        string _strReceiveCOM_MeasureVolCur = "";
         string _strReceiveCOM_IR = "";
         const string PrinterIPAddress = "192.168.254.254";
         const string PLCIPAddress = "192.168.254.10";
@@ -60,8 +59,8 @@ namespace AssyChargeSEHC
         {
             InitializeComponent();
 
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
-            timer.Tick += new EventHandler(Timer_Tick);
+            //timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            //timer.Tick += new EventHandler(Timer_Tick);
 
             InitialGraph();
             //Binding
@@ -93,11 +92,32 @@ namespace AssyChargeSEHC
             this.lbChCurMin.DataContext = DefaultValues.Instance();
             this.lbChCurMax.DataContext = DefaultValues.Instance();
 
-            //StartAppExcel();
-            //InitializeCOM_PLC();
+            StartAppExcel();
+            InitializeCOM_PLC();
+            Initial_Get_CounterAmount();
 
         }
-
+        /// <summary>
+        /// Khoi tao hoac lay du lieu counter
+        /// </summary>
+        void Initial_Get_CounterAmount()
+        {
+            using (var dao = new UserDAO())
+            {
+                string date = DateTime.Now.ToString("dd/MM/yyyy");
+                if (dao.CheckExist(date))
+                {
+                    int[] arr = dao.GetCounterAmount(date);
+                    Common.Instance().CountOK = arr[0];
+                    Common.Instance().CountNG = arr[1];
+                    Common.Instance().CountTotal = arr[2];
+                }
+                else
+                {
+                    dao.AddCounterAmount(date, 0, 0, 0);
+                }
+            }
+        }
         void InitialGraph()
         {
 
@@ -232,6 +252,7 @@ namespace AssyChargeSEHC
                 _Done1 = false;
                 _Done2 = false;
                 _flagSetIni = false;
+                txtMessage.Text = "";
 
                 COM_MeasureVolCur.Close();
             }));
@@ -357,6 +378,10 @@ namespace AssyChargeSEHC
                     case 1:
                         if (!COM_MeasureVolCur.IsOpen)
                         {
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                txtMessage.Text = "RUNNING...\n\t1. Checking Standby Voltage";
+                            }));
                             COM_MeasureVolCur.Open();
                             await Wait1Second();
                             await Wait1Second();
@@ -366,6 +391,10 @@ namespace AssyChargeSEHC
                     case 2:
                         if (_Done1 == true && _flagStartRead == false)
                         {
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                txtMessage.Text += "\n\t2. Checking Charging Volatge and Charging Current";
+                            }));
                             COM_MeasureVolCur.Write(_commandONOFF, 0, _commandONOFF.Length);
                             await Wait1Second();
                             COM_IR.Write("1");
@@ -377,6 +406,10 @@ namespace AssyChargeSEHC
                     case 3:
                         if (_Done2)
                         {
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                txtMessage.Text += "\n\t3. Checking IR";
+                            }));
                             if (!COM_IR.IsOpen)
                                 COM_IR.Open();
                             COM_IR.Write("0");
@@ -391,10 +424,15 @@ namespace AssyChargeSEHC
                         // Đánh giá kết quả cuối cùng
                         if (_flagIR)
                         {
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                txtMessage.Text += "\n\t4. Waiting Final Judge...";
+                            }));
                             COM_MeasureVolCur.Write(_commandONOFF, 0, _commandONOFF.Length);
                             await Wait1Second();
                             COM_MeasureVolCur.Close();
                             Common.Instance().CountTotal += 1;
+                            //Đánh giá kết quả OK NG cuối cùng
                             if (MeasurementValues.Instance().FinalJudgement())
                             {
                                 MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.OK;
@@ -405,12 +443,22 @@ namespace AssyChargeSEHC
                                 MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.NG;
                                 Common.Instance().CountNG += 1;
                             }
+                            //Ghi dữ liệu vào file báo cáo Excel
                             if (_myDataTemplateWorkSheet != null)
                             {
                                 DefaultValues.Instance().ID++;
                                 _CountDataInTemplate += 1;
                                 var tempRange = (Excel.Range)_myDataTemplateWorkSheet.Cells[_CountDataInTemplate, 1];
                                 ExcelTemplateInput(tempRange);
+                            }
+                            //Cập nhật dữ liệu Counter
+                            using (var dao = new UserDAO())
+                            {
+                                string dt = DateTime.Now.ToString("dd/MM/yyyy");
+                                if (dao.CheckExist(dt))
+                                {
+                                    dao.EditCounterAmount(dt, Common.Instance().CountOK, Common.Instance().CountNG, Common.Instance().CountTotal);
+                                }
                             }
                             if (MeasurementValues.Instance().JudgeFinal == MeasurementValues.Judge.OK)
                             {
@@ -434,6 +482,10 @@ namespace AssyChargeSEHC
                             }
                             _flagIR = false;
                             _flagSetIni = true;
+                            Dispatcher.Invoke(new Action(() =>
+                            {
+                                txtMessage.Text = "END!";
+                            }));
                         }
                         // Gửi dữ liệu cho PLC đưa cơ cấu lại vị trí bắt đầu, (đặt giá trị thanh ghi về O)
                         //_currentProgram = 0;
@@ -472,7 +524,6 @@ namespace AssyChargeSEHC
                     {
                         byte[] result = eeipClient.AssemblyObject.getInstance(100);
                         _StartProgram = EEIPClient.ToUshort(result);
-                        richMessage.Text = _StartProgram.ToString();
                         //label1.Text = string.Format("{0}", EEIPClient.ToUshort(result));
                     }));
                 }
@@ -485,6 +536,7 @@ namespace AssyChargeSEHC
         }
         void InitializeCOM_PLC()
         {
+
             //Initialize COM measure Voltage, Current
             COM_MeasureVolCur = new SerialPort("COM4", 9600, Parity.None, 8, StopBits.One);
             COM_MeasureVolCur.ReadTimeout = 2000;
@@ -514,6 +566,9 @@ namespace AssyChargeSEHC
             _threadProcess = new Thread(ProcessOperation);
             _threadProcess.IsBackground = false;
             _threadProcess.Start();
+
+            if (COM_IR.IsOpen && _threadPLC.ThreadState == System.Threading.ThreadState.Running && _threadProcess.ThreadState == System.Threading.ThreadState.Running)
+                txtMessage.Text = "ALL READY!";
         }
 
         /// <summary>
@@ -549,16 +604,6 @@ namespace AssyChargeSEHC
             }
         }
 
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            countTime++;
-            if (countTime > 10)
-            {
-                timer.Stop();
-            }
-        }
-
         bool _Done1, _Done2;
         private void COM_MeasureVolCur_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -580,8 +625,8 @@ namespace AssyChargeSEHC
                     if (_currentProgram == 1 && _Done1 == false)
                     {
                         MeasurementValues.Instance().VoltageStandby = (float)bytearr1[i + 6] / 10f;
-                        if (MeasurementValues.Instance().VoltageStandby > float.Parse(DefaultValues.Instance().StandbyVoltageMin)
-                            && MeasurementValues.Instance().VoltageStandby < float.Parse(DefaultValues.Instance().StandbyVoltageMax))
+                        if (MeasurementValues.Instance().VoltageStandby > DefaultValues.Instance().StandbyVoltageMin
+                            && MeasurementValues.Instance().VoltageStandby < DefaultValues.Instance().StandbyVoltageMax)
                             MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.OK;
                         else
                             MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.NG;
@@ -615,15 +660,15 @@ namespace AssyChargeSEHC
                     MeasurementValues.Instance().Voltage = ((float)bytearr1[i - 31] * 256 + (float)bytearr1[i - 30]) / 10f;
                     MeasurementValues.Instance().Current = ((float)bytearr1[i - 28] * 0.25f) + ((float)bytearr1[i - 27]) / 1000f;
 
-                    if (MeasurementValues.Instance().Voltage > float.Parse(DefaultValues.Instance().ChargingVoltageMin)
-                        && MeasurementValues.Instance().Voltage < float.Parse(DefaultValues.Instance().ChargingVoltageMax))
+                    if (MeasurementValues.Instance().Voltage > DefaultValues.Instance().ChargingVoltageMin
+                        && MeasurementValues.Instance().Voltage < DefaultValues.Instance().ChargingVoltageMax)
                         MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
                     else
                         MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.NG;
 
 
-                    if (MeasurementValues.Instance().Current < float.Parse(DefaultValues.Instance().ChargingCurrentMin)
-                        || MeasurementValues.Instance().Current > float.Parse(DefaultValues.Instance().ChargingCurrentMax))
+                    if (MeasurementValues.Instance().Current < DefaultValues.Instance().ChargingCurrentMin
+                        || MeasurementValues.Instance().Current > DefaultValues.Instance().ChargingCurrentMax)
                     {
                         MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.NG;
                     }
@@ -802,6 +847,10 @@ namespace AssyChargeSEHC
         {
             using (var dao = new UserDAO())
             {
+                //Ghi nhat ky he thống
+                dao.AddNewAction(DateTime.Now.ToString("ddMMyyyyHHmmssfff"), DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), "Open Software, System Start Operation!");
+
+                //Tải dữ liệu model vào combobox
                 cbbModelList.ItemsSource = dao.GetModelList();
                 dgResultList.ItemsSource = dao.GetResultList();
 
@@ -809,12 +858,12 @@ namespace AssyChargeSEHC
 
                 var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
                 DefaultValues.Instance().ModelName = _s[0].ModelName;
-                DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
-                DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
-                DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
-                DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
-                DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
-                DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
+                DefaultValues.Instance().StandbyVoltageMin = float.Parse(_s[0].StandbyVoltageMin);
+                DefaultValues.Instance().StandbyVoltageMax = float.Parse(_s[0].StandbyVoltageMax);
+                DefaultValues.Instance().ChargingVoltageMin = float.Parse(_s[0].ChargingVoltageMin);
+                DefaultValues.Instance().ChargingVoltageMax = float.Parse(_s[0].ChargingVoltageMax);
+                DefaultValues.Instance().ChargingCurrentMin = float.Parse(_s[0].ChargingCurrentMin);
+                DefaultValues.Instance().ChargingCurrentMax = float.Parse(_s[0].ChargingCurrentMax);
 
                 List<ResultList> lst = dgResultList.ItemsSource as List<ResultList>;
                 for (int i = 0; i < lst.Count; i++)
@@ -1022,6 +1071,15 @@ namespace AssyChargeSEHC
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            //Cập nhật dữ liệu Counter
+            using (var dao = new UserDAO())
+            {
+                string dt = DateTime.Now.ToString("dd/MM/yyyy");
+                if (dao.CheckExist(dt))
+                {
+                    dao.EditCounterAmount(dt, Common.Instance().CountOK, Common.Instance().CountNG, Common.Instance().CountTotal);
+                }
+            }
             try
             {
                 if (COM_IR.IsOpen)
@@ -1056,7 +1114,7 @@ namespace AssyChargeSEHC
                         break;
                 }
             }
-            catch { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         private void Event_PushF2(object sender, ExecutedRoutedEventArgs e)
@@ -1071,6 +1129,7 @@ namespace AssyChargeSEHC
             {
                 wdAddModel wd = new wdAddModel();
                 wd.lbAddEdit.Content = "Add New Model";
+                wd.EvAddEditDone += Wd_EvAddEditDone;
                 wd._Mode = wdAddModel.Mode.Add;
                 wd.ShowDialog();
             }
@@ -1083,31 +1142,17 @@ namespace AssyChargeSEHC
                 wd.ShowDialog();
             }
         }
-
+        /// <summary>
+        /// Sự kiện Thêm hoặc sửa thành công
+        /// </summary>
         private void Wd_EvAddEditDone()
         {
             using (var dao = new UserDAO())
             {
-
-                cbbModelList.ItemsSource = dao.GetModelList();
-                //var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
-                //DefaultValues.Instance().ModelName = _s[0].ModelName;
-                //DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
-                //DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
-                //DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
-                //DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
-                //DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
-                //DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
-            }
-        }
-        private void cbbModelList_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            using (var dao = new UserDAO())
-            {
+                cbbModelList.SelectedItem = DefaultValues.Instance().ModelName;
                 cbbModelList.ItemsSource = dao.GetModelList();
             }
         }
-
         private void Event_PushF3(object sender, ExecutedRoutedEventArgs e)
         {
             wdCheckQRCode wd = new wdCheckQRCode();
@@ -1116,11 +1161,14 @@ namespace AssyChargeSEHC
 
         private void Event_PushF4(object sender, ExecutedRoutedEventArgs e)
         {
-            mnuAddEdit_Click(null, null);
+            if (Common.Instance().RoleID == 0)
+                mnuLogin_Click(null, null);
+            else
+                mnuSignOut_Click(null, null);
         }
         private void Event_PushF5(object sender, ExecutedRoutedEventArgs e)
         {
-
+            mnuLogs_Click(null, null);
         }
         private void cbbModelList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1132,12 +1180,12 @@ namespace AssyChargeSEHC
 
                 var _s = dao.GetDefaultValues(cbbModelList.SelectedItem.ToString());
                 DefaultValues.Instance().ModelName = _s[0].ModelName;
-                DefaultValues.Instance().StandbyVoltageMin = _s[0].StandbyVoltageMin;
-                DefaultValues.Instance().StandbyVoltageMax = _s[0].StandbyVoltageMax;
-                DefaultValues.Instance().ChargingVoltageMin = _s[0].ChargingVoltageMin;
-                DefaultValues.Instance().ChargingVoltageMax = _s[0].ChargingVoltageMax;
-                DefaultValues.Instance().ChargingCurrentMin = _s[0].ChargingCurrentMin;
-                DefaultValues.Instance().ChargingCurrentMax = _s[0].ChargingCurrentMax;
+                DefaultValues.Instance().StandbyVoltageMin = float.Parse(_s[0].StandbyVoltageMin);
+                DefaultValues.Instance().StandbyVoltageMax = float.Parse(_s[0].StandbyVoltageMax);
+                DefaultValues.Instance().ChargingVoltageMin = float.Parse(_s[0].ChargingVoltageMin);
+                DefaultValues.Instance().ChargingVoltageMax = float.Parse(_s[0].ChargingVoltageMax);
+                DefaultValues.Instance().ChargingCurrentMin = float.Parse(_s[0].ChargingCurrentMin);
+                DefaultValues.Instance().ChargingCurrentMax = float.Parse(_s[0].ChargingCurrentMax);
             }
         }
 
@@ -1149,12 +1197,79 @@ namespace AssyChargeSEHC
 
         private void mnuLogin_Click(object sender, RoutedEventArgs e)
         {
-
+            wdLogin wdLogin = new wdLogin();
+            wdLogin.EventLogin += WdLogin_EventLogin;
+            wdLogin.ShowDialog();
+        }
+        /// <summary>
+        /// Sự kiện hoàn thành việc đăng nhập
+        /// </summary>
+        /// <param name="logSt"></param>
+        /// <param name="roleId"></param>
+        private void WdLogin_EventLogin(LoginState logSt, int roleId)
+        {
+            switch (logSt)
+            {
+                case LoginState.Success:
+                    switch (roleId)
+                    {
+                        case 1:
+                            mnuAdd.IsEnabled = true;
+                            mnuEdit.IsEnabled = true;
+                            mnuSetCurrent.IsEnabled = true;
+                            mnuChangePass.IsEnabled = true;
+                            mnuLogs.IsEnabled = true;
+                            break;
+                        case 2:
+                            mnuSetCurrent.IsEnabled = true;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case LoginState.Fail:
+                    MessageBox.Show("Role Name or Password ís not correct!\nTry again!");
+                    break;
+                case LoginState.Null:
+                    if (roleId == 0)
+                    {
+                        mnuAdd.IsEnabled = false;
+                        mnuEdit.IsEnabled = false;
+                        mnuSetCurrent.IsEnabled = false;
+                        mnuChangePass.IsEnabled = false;
+                        mnuLogs.IsEnabled = false;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void mnuLogs_Click(object sender, RoutedEventArgs e)
         {
+            if (Common.Instance().RoleID == 1)
+            {
+                wdSystemLogs wdLog = new wdSystemLogs();
+                wdLog.ShowDialog();
+            }
+        }
 
+        private void mnuChangePass_Click(object sender, RoutedEventArgs e)
+        {
+            wdChangePassword wdChangePass = new wdChangePassword();
+            wdChangePass.EventChangePassword += ChangePasswordSuccess;
+            wdChangePass.ShowDialog();
+        }
+
+        private void ChangePasswordSuccess()
+        {
+            mnuSignOut_Click(null, null);
+        }
+
+        private void mnuSignOut_Click(object sender, RoutedEventArgs e)
+        {
+            WdLogin_EventLogin(LoginState.Null, 0);
+            Common.Instance().RoleID = 0;
         }
 
         private void mnuEdit_Click(object sender, RoutedEventArgs e)

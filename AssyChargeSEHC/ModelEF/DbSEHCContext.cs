@@ -11,6 +11,9 @@ namespace AssyChargeSEHC.ModelEF
     {
         public DbSet<ModelList> ModelList { get; set; }
         public DbSet<ResultList> ResultList { get; set; }
+        public DbSet<Account> Account { get; set; }
+        public DbSet<CounterAmount> CounterAmount { get; set; }
+        public DbSet<SystemLogs> SystemLogs { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=DbSEHC.db");

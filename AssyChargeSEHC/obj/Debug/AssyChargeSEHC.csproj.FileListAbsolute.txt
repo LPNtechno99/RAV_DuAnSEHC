@@ -951,7 +951,6 @@ D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\bin\
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\bin\Debug\tr\ZedGraph.resources.dll
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\bin\Debug\zh-cn\ZedGraph.resources.dll
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\bin\Debug\zh-tw\ZedGraph.resources.dll
-D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.csprojAssemblyReference.cache
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.csproj.ResolveComReference.cache
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\MainWindow.g.cs
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\wdAddModel.g.cs
@@ -973,3 +972,9 @@ D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.csproj.CopyComplete
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.exe
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.pdb
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\wdLogin.g.cs
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\wdLogin.baml
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\wdChangePassword.g.cs
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\wdChangePassword.baml
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\wdSystemLogs.g.cs
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\obj\Debug\wdSystemLogs.baml

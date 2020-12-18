@@ -26,6 +26,8 @@ namespace AssyChargeSEHC
         private int _countng = 0;
         private int _counttotal = 0;
 
+        public int RoleID { get; set; }
+
         public int CountOK
         {
             get { return _countpass; }

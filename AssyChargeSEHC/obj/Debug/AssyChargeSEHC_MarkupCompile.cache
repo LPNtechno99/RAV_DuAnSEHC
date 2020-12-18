@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (17-12-2020)\AssyChargeSEHC\App.xaml
-4-582282218
+71308694452
 32134807686
-171941614828
+23367583455
 75-1774073178
-MainWindow.xaml;wdAddModel.xaml;wdCheckQRCode.xaml;wdSetCurrent.xaml;
+MainWindow.xaml;wdAddModel.xaml;wdChangePassword.xaml;wdCheckQRCode.xaml;wdLogin.xaml;wdSetCurrent.xaml;wdSystemLogs.xaml;
 
 False
 

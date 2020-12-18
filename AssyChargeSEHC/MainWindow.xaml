@@ -32,6 +32,16 @@
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
+        <Style x:Key="labelTilteStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="#FFE8BD61"/>
+            <Setter Property="BorderThickness" Value="0.6"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="Esc" Command="{StaticResource myCommandEsc}"/>
@@ -77,9 +87,9 @@
                             <TextBlock Margin="5 0 0 0" Text="Model"/>
                         </StackPanel>
                     </MenuItem.Header>
-                    <MenuItem Header="Add" FontSize="18" FontWeight="Bold" Click="mnuAddEdit_Click" Tag="1"/>
+                    <MenuItem Name="mnuAdd" IsEnabled="False" Header="Add" FontSize="18" FontWeight="Bold" Click="mnuAddEdit_Click" Tag="1"/>
                     <Separator/>
-                    <MenuItem Header="Edit" FontSize="18" FontWeight="Bold" Click="mnuAddEdit_Click" Tag="2"/>
+                    <MenuItem Name="mnuEdit" IsEnabled="False" Header="Edit" FontSize="18" FontWeight="Bold" Click="mnuAddEdit_Click" Tag="2"/>
                 </MenuItem>
                 <MenuItem FontSize="20" FontWeight="Bold">
                     <MenuItem.Header>
@@ -89,13 +99,19 @@
                         </StackPanel>
                     </MenuItem.Header>
                     <MenuItem Header="Set Current" FontSize="18" FontWeight="Bold"
-                              Name="mnuSetCurrent" Click="mnuSetCurrent_Click"/>
+                              Name="mnuSetCurrent" IsEnabled="False" Click="mnuSetCurrent_Click"/>
                     <Separator/>
                     <MenuItem Header="Logs" FontSize="18" FontWeight="Bold" Name="mnuLogs"
-                              Click="mnuLogs_Click"/>
+                              Click="mnuLogs_Click" IsEnabled="False"/>
                     <Separator/>
-                    <MenuItem Header="LOGIN" FontSize="18" FontWeight="Bold"
+                    <MenuItem Header="Change Password" FontSize="18" FontWeight="Bold"
+                              Name="mnuChangePass" IsEnabled="False" Click="mnuChangePass_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Sign In" FontSize="18" FontWeight="Bold"
                               Name="mnuLogin" Click="mnuLogin_Click"/>
+                    <Separator/>
+                    <MenuItem Header="Sign Out" FontSize="18" FontWeight="Bold"
+                              Name="mnuSignOut" Click="mnuSignOut_Click"/>
                 </MenuItem>
             </Menu>
         </Grid>
@@ -121,8 +137,7 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="Model Select:" Style="{StaticResource labelStyle}"/>
                     <ComboBox Name="cbbModelList" Grid.Column="1" Margin="2 0 0 0" FontSize="20" FontWeight="Bold"
-                              VerticalContentAlignment="Center" PreviewMouseDown="cbbModelList_PreviewMouseDown"
-                              SelectionChanged="cbbModelList_SelectionChanged"/>
+                              VerticalContentAlignment="Center" SelectionChanged="cbbModelList_SelectionChanged"/>
                 </Grid>
                 <Grid Grid.Column="1" Margin="5 0 0 0">
                     <Grid.ColumnDefinitions>
@@ -165,13 +180,13 @@
                         <Label Grid.Row="0" Grid.Column="5" Grid.RowSpan="2" Style="{StaticResource labelStyle}" Content="Judge"/>
                         <Label Grid.Row="0" Grid.Column="6" Grid.RowSpan="2" Style="{StaticResource labelStyle}" Content="Check"/>
                         <!--Label thanh phan-->
-                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Content="Standby Voltage (V)" FontSize="16" Background="#FF59B465"/>
-                        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Content="IR Left" FontSize="16" Background="#FF59B465"/>
-                        <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Content="IR Center" FontSize="16" Background="#FF59B465"/>
-                        <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelStyle}" Content="IR Right" FontSize="16" Background="#FF59B465"/>
-                        <Label Grid.Row="6" Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource labelStyle}" Content="Charging" FontSize="16" Background="#FF59B465"/>
-                        <Label Grid.Row="6" Grid.Column="1" Style="{StaticResource labelStyle}" Content="Voltage (V)" FontSize="16" Background="#FF59B465"/>
-                        <Label Grid.Row="7" Grid.Column="1" Style="{StaticResource labelStyle}" Content="Current (A)" FontSize="16" Background="#FF59B465"/>
+                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelTilteStyle}" Content="Standby Voltage (V)" />
+                        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelTilteStyle}" Content="IR Left"/>
+                        <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelTilteStyle}" Content="IR Center"/>
+                        <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource labelTilteStyle}" Content="IR Right"/>
+                        <Label Grid.Row="6" Grid.Column="0" Grid.RowSpan="2" Style="{StaticResource labelTilteStyle}" Content="Charging"/>
+                        <Label Grid.Row="6" Grid.Column="1" Style="{StaticResource labelTilteStyle}" Content="Voltage (V)"/>
+                        <Label Grid.Row="7" Grid.Column="1" Style="{StaticResource labelTilteStyle}" Content="Current (A)"/>
                         <!--Label Gia tri mac dinh-->
                         <Label Grid.Row="2" Grid.Column="2" Style="{StaticResource labelStyle}" Background="White" 
                                Foreground="Black" Content="{Binding StandbyVoltageMin, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0" Name="lbStVolMin"/>
@@ -190,24 +205,24 @@
                                Foreground="Black" Content="{Binding ChargingCurrentMax, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.00" Name="lbChCurMax"/>
                         <!--Label Gia tri do-->
                         <Label Name="labelVoltageStandby" Grid.Row="2" Grid.Column="4" Style="{StaticResource labelStyle}" Background="{Binding JudgeVoltageStandby, Converter={StaticResource ColorChangeOKNG}}" 
-                               Foreground="Black" Content="{Binding VoltageStandby,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0"/>
+                               Foreground="White" Content="{Binding VoltageStandby,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0"/>
                         <Label Name="labelIRLeft" Grid.Row="3" Grid.Column="4" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRLeft, Converter={StaticResource ColorChangeOKNG}}" 
-                               Foreground="Black" Content="{Binding IRLeft, UpdateSourceTrigger=PropertyChanged}"/>
+                               Foreground="White" Content="{Binding IRLeft, UpdateSourceTrigger=PropertyChanged}"/>
                         <Label Name="labelIRCenter" Grid.Row="4" Grid.Column="4" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRCenter, Converter={StaticResource ColorChangeOKNG}}" 
-                               Foreground="Black" Content="{Binding IRCenter, UpdateSourceTrigger=PropertyChanged}"/>
+                               Foreground="White" Content="{Binding IRCenter, UpdateSourceTrigger=PropertyChanged}"/>
                         <Label Name="labelIRRight" Grid.Row="5" Grid.Column="4" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRRight, Converter={StaticResource ColorChangeOKNG}}" 
-                               Foreground="Black" Content="{Binding IRRight, UpdateSourceTrigger=PropertyChanged}"/>
+                               Foreground="White" Content="{Binding IRRight, UpdateSourceTrigger=PropertyChanged}"/>
                         <Label Name="labelVoltage" Grid.Row="6" Grid.Column="4" Style="{StaticResource labelStyle}" Background="{Binding JudgeVoltage, Converter={StaticResource ColorChangeOKNG}}" 
-                               Foreground="Black" Content="{Binding Voltage, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0"/>
+                               Foreground="White" Content="{Binding Voltage, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.0"/>
                         <Label Name="labelCurrent" Grid.Row="7" Grid.Column="4" Style="{StaticResource labelStyle}" Background="{Binding JudgeCurrent, Converter={StaticResource ColorChangeOKNG}}" 
-                               Foreground="Black" Content="{Binding Current, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.00"/>
+                               Foreground="White" Content="{Binding Current, UpdateSourceTrigger=PropertyChanged}" ContentStringFormat="0.00"/>
                         <!--Label Tham Dinh-->
-                        <Label Name="labelJudgeVoltageStandby" Grid.Row="2" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeVoltageStandby,Converter={StaticResource ColorChangeOKNG}}" Foreground="Black" Content="{Binding JudgeVoltageStandby,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Name="labelJudgeIRLeft" Grid.Row="3" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRLeft,Converter={StaticResource ColorChangeOKNG}}" Foreground="Black" Content="{Binding JudgeIRLeft,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Name="labelJudgeIRCenter" Grid.Row="4" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRCenter,Converter={StaticResource ColorChangeOKNG}}" Foreground="Black" Content="{Binding JudgeIRCenter,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Name="labelJudgeIRRight" Grid.Row="5" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRRight,Converter={StaticResource ColorChangeOKNG}}" Foreground="Black" Content="{Binding JudgeIRRight,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Name="labelJudgeVoltage" Grid.Row="6" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeVoltage,Converter={StaticResource ColorChangeOKNG}}" Foreground="Black" Content="{Binding JudgeVoltage,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Name="labelJudgeCurrent" Grid.Row="7" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeCurrent,Converter={StaticResource ColorChangeOKNG}}" Foreground="Black" Content="{Binding JudgeCurrent,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Name="labelJudgeVoltageStandby" Grid.Row="2" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeVoltageStandby,Converter={StaticResource ColorChangeOKNG}}" Foreground="White" Content="{Binding JudgeVoltageStandby,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Name="labelJudgeIRLeft" Grid.Row="3" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRLeft,Converter={StaticResource ColorChangeOKNG}}" Foreground="White" Content="{Binding JudgeIRLeft,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Name="labelJudgeIRCenter" Grid.Row="4" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRCenter,Converter={StaticResource ColorChangeOKNG}}" Foreground="White" Content="{Binding JudgeIRCenter,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Name="labelJudgeIRRight" Grid.Row="5" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeIRRight,Converter={StaticResource ColorChangeOKNG}}" Foreground="White" Content="{Binding JudgeIRRight,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Name="labelJudgeVoltage" Grid.Row="6" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeVoltage,Converter={StaticResource ColorChangeOKNG}}" Foreground="White" Content="{Binding JudgeVoltage,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Name="labelJudgeCurrent" Grid.Row="7" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeCurrent,Converter={StaticResource ColorChangeOKNG}}" Foreground="White" Content="{Binding JudgeCurrent,UpdateSourceTrigger=PropertyChanged}"/>
                         <!--Checkbox Check-->
                         <Border Grid.Row="2" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
                             <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
@@ -332,7 +347,7 @@
                     </Grid.RowDefinitions>
                     <Label Style="{StaticResource labelStyle}" Content="Final Judgement"/>
                     <Label Name="labelFinalJudgement" Grid.Row="1" Style="{StaticResource labelStyle}" Background="{Binding JudgeFinal, Converter={StaticResource ColorChangeOKNG}}" 
-                           Foreground="Black" FontSize="80" FontWeight="Bold" Content="{Binding JudgeFinal, UpdateSourceTrigger=PropertyChanged}"/>
+                           Foreground="White" FontSize="80" FontWeight="Bold" Content="{Binding JudgeFinal, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
@@ -340,8 +355,8 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Label Style="{StaticResource labelStyle}" Content="Test Message"/>
-                    <TextBox Name="richMessage" Grid.Row="1" Background="{Binding}" 
-                           Foreground="Black" FontSize="10" FontWeight="Bold" />
+                    <TextBox Padding="5" Name="txtMessage" Grid.Row="1" Background="#FF3C668F"
+                             Foreground="White" FontSize="12" FontWeight="Bold" AcceptsReturn="True"/>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
@@ -402,7 +417,7 @@
                 <Label Style="{StaticResource labelStyle}" Content="F1 - Test Status/Result List"/>
                 <Label Grid.Column="1" Style="{StaticResource labelStyle}" Content="F2 - Open Excel"/>
                 <Label Grid.Column="2" Style="{StaticResource labelStyle}" Content="F3 - Check QRCode"/>
-                <Label Grid.Column="3" Style="{StaticResource labelStyle}" Content="F4 - Add/Edit Model"/>
+                <Label Grid.Column="3" Style="{StaticResource labelStyle}" Content="F4 - Sign In/Sign Out"/>
                 <Label Grid.Column="4" Style="{StaticResource labelStyle}" Content="F5 - Logs"/>
                 <Label Grid.Column="5" Style="{StaticResource labelStyle}" Content="Esc - Exit"/>
             </Grid>

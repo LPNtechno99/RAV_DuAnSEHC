@@ -35,8 +35,8 @@ namespace AssyChargeSEHC
             }
         }
 
-        private string _StVolMin;
-        public string StandbyVoltageMin 
+        private float _StVolMin;
+        public float StandbyVoltageMin 
         {
             get { return _StVolMin; }
             set
@@ -45,8 +45,8 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("StandbyVoltageMin");
             }
         }
-        private string _StVolMax;
-        public string StandbyVoltageMax
+        private float _StVolMax;
+        public float StandbyVoltageMax
         {
             get { return _StVolMax; }
             set
@@ -55,8 +55,8 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("StandbyVoltageMax");
             }
         }
-        private string _ChVolMin;
-        public string ChargingVoltageMin
+        private float _ChVolMin;
+        public float ChargingVoltageMin
         {
             get { return _ChVolMin; }
             set
@@ -65,8 +65,8 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("ChargingVoltageMin");
             }
         }
-        private string _ChVolMax;
-        public string ChargingVoltageMax
+        private float _ChVolMax;
+        public float ChargingVoltageMax
         {
             get { return _ChVolMax; }
             set
@@ -75,8 +75,8 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("ChargingVoltageMax");
             }
         }
-        private string _ChCurMin;
-        public string ChargingCurrentMin
+        private float _ChCurMin;
+        public float ChargingCurrentMin
         {
             get { return _ChCurMin; }
             set
@@ -85,8 +85,8 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("ChargingCurrentMin");
             }
         }
-        private string _ChCurMax;
-        public string ChargingCurrentMax
+        private float _ChCurMax;
+        public float ChargingCurrentMax
         {
             get { return _ChCurMax; }
             set

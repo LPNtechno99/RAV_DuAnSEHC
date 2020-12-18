@@ -54,22 +54,38 @@ namespace AssyChargeSEHC
             int i = 0;
             if (f1 < 5.0f)
                 number = (int)(f1 * 100f);
-            while(number > 0)
+            while (number > 0)
             {
                 arr[i] = number % 10;
                 i++;
                 number /= 10;
             }
-            for (int j = 0; j < arr.Length; j++)
+            if (arr[1] > 0)
             {
-                if(arr[j] > 0)
+                for (int j = 0; j < arr[1]; j++)
                 {
-                    for (int k = 0; k < arr[j]; k++)
-                    {
-                        
-                    }
+                    COM_IR.Write(_cmdButtonPlus, 0, _cmdButtonPlus.Length);
                 }
             }
+            if (arr[2] > 0)
+            {
+                COM_IR.Write(_cmdSetup, 0, _cmdSetup.Length);
+                for (int j = 0; j < arr[2]; j++)
+                {
+                    COM_IR.Write(_cmdButtonPlus, 0, _cmdButtonPlus.Length);
+                }
+            }
+            if(arr[0] > 0)
+            {
+                COM_IR.Write(_cmdSetup, 0, _cmdSetup.Length);
+                Thread.Sleep(5);
+                COM_IR.Write(_cmdSetup, 0, _cmdSetup.Length);
+                for (int j = 0; j < arr[0]; j++)
+                {
+                    COM_IR.Write(_cmdButtonPlus, 0, _cmdButtonPlus.Length);
+                }
+            }
+            COM_IR.Write(_cmdSetup, 0, _cmdSetup.Length);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

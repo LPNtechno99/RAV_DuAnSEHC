@@ -230,14 +230,26 @@
     </ApplicationDefinition>
     <Compile Include="Common.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />
+    <Compile Include="ModelEF\Account.cs" />
+    <Compile Include="ModelEF\CounterAmount.cs" />
+    <Compile Include="ModelEF\SystemLogs.cs" />
     <Compile Include="wdAddModel.xaml.cs">
       <DependentUpon>wdAddModel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="wdChangePassword.xaml.cs">
+      <DependentUpon>wdChangePassword.xaml</DependentUpon>
     </Compile>
     <Compile Include="wdCheckQRCode.xaml.cs">
       <DependentUpon>wdCheckQRCode.xaml</DependentUpon>
     </Compile>
+    <Compile Include="wdLogin.xaml.cs">
+      <DependentUpon>wdLogin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="wdSetCurrent.xaml.cs">
       <DependentUpon>wdSetCurrent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="wdSystemLogs.xaml.cs">
+      <DependentUpon>wdSystemLogs.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -258,11 +270,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="wdChangePassword.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="wdCheckQRCode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="wdLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="wdSetCurrent.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="wdSystemLogs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
