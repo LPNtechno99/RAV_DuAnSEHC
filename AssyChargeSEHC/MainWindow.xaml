@@ -21,6 +21,7 @@
         <RoutedUICommand x:Key="myCommandF3" Text="text"/>
         <RoutedUICommand x:Key="myCommandF4" Text="text"/>
         <RoutedUICommand x:Key="myCommandF5" Text="text"/>
+        <RoutedUICommand x:Key="myCommandF6" Text="text"/>
         <!--Style-->
         <Style x:Key="labelStyle" TargetType="Label">
             <Setter Property="FontSize" Value="20"/>
@@ -50,6 +51,7 @@
         <KeyBinding Key="F3" Command="{StaticResource myCommandF3}"/>
         <KeyBinding Key="F4" Command="{StaticResource myCommandF4}"/>
         <KeyBinding Key="F5" Command="{StaticResource myCommandF5}"/>
+        <KeyBinding Key="F6" Command="{StaticResource myCommandF6}"/>
     </Window.InputBindings>
     <Window.CommandBindings>
         <CommandBinding Command="{StaticResource myCommandEsc}" Executed="CommandBinding_Executed"/>
@@ -58,6 +60,7 @@
         <CommandBinding Command="{StaticResource myCommandF3}" Executed="Event_PushF3"/>
         <CommandBinding Command="{StaticResource myCommandF4}" Executed="Event_PushF4"/>
         <CommandBinding Command="{StaticResource myCommandF5}" Executed="Event_PushF5"/>
+        <CommandBinding Command="{StaticResource myCommandF6}" Executed="Event_PushF6"/>
     </Window.CommandBindings>
     <Grid Background="White">
         <!--<WindowsFormsHost HorizontalAlignment="Left" Height="219" Margin="132,35,0,0" VerticalAlignment="Top" Width="545">
@@ -413,13 +416,15 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Style="{StaticResource labelStyle}" Content="F1 - Test Status/Result List"/>
                 <Label Grid.Column="1" Style="{StaticResource labelStyle}" Content="F2 - Open Excel"/>
                 <Label Grid.Column="2" Style="{StaticResource labelStyle}" Content="F3 - Check QRCode"/>
                 <Label Grid.Column="3" Style="{StaticResource labelStyle}" Content="F4 - Sign In/Sign Out"/>
                 <Label Grid.Column="4" Style="{StaticResource labelStyle}" Content="F5 - Logs"/>
-                <Label Grid.Column="5" Style="{StaticResource labelStyle}" Content="Esc - Exit"/>
+                <Label Grid.Column="5" Style="{StaticResource labelStyle}" Content="F6 - Set Current"/>
+                <Label Grid.Column="6" Style="{StaticResource labelStyle}" Content="Esc - Exit"/>
             </Grid>
         </Grid>
     </Grid>

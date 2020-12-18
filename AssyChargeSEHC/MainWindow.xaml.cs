@@ -399,6 +399,7 @@ namespace AssyChargeSEHC
                             await Wait1Second();
                             COM_IR.Write("1");
                             await Wait2Second();
+                            await Wait1500MiliSecond();
                             _Done1 = false;
                             _flagStartRead = true;
                         }
@@ -467,15 +468,15 @@ namespace AssyChargeSEHC
                                 Common.Instance()._Strings = DefaultValues.Instance().ModelName;
                                 Common.Instance()._Time = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-                                string s = Common.Instance().QRCodeString(DefaultValues.Instance().IRLeft, DefaultValues.Instance().IRCenter, DefaultValues.Instance().IRRight,
+                                Common.Instance()._QRCode = Common.Instance().QRCodeString(DefaultValues.Instance().IRLeft, DefaultValues.Instance().IRCenter, DefaultValues.Instance().IRRight,
                                     MeasurementValues.Instance().VoltageStandby.ToString(), MeasurementValues.Instance().Voltage.ToString(), MeasurementValues.Instance().Current.ToString());
                                 await Wait1Second();
-                                SendZplOverTcp(PrinterIPAddress, DefaultValues.Instance().ModelName, s);
+                                SendZplOverTcp(PrinterIPAddress, DefaultValues.Instance().ModelName, Common.Instance()._QRCode);
 
                                 Dispatcher.Invoke(new Action(() =>
                                 {
                                     string _t = DateTime.Now.ToString("ddMMyyyyHHmmssfff");
-                                    QRCodeWriter.CreateQrCode(s, 500, QRCodeWriter.QrErrorCorrectionLevel.Medium).SaveAsPng("D:\\Data\\QRCode\\mQRCode" + _t + ".png");
+                                    QRCodeWriter.CreateQrCode(Common.Instance()._QRCode, 500, QRCodeWriter.QrErrorCorrectionLevel.Medium).SaveAsPng("D:\\Data\\QRCode\\mQRCode" + _t + ".png");
                                     Uri fileUri = new Uri("D:\\Data\\QRCode\\mQRCode" + _t + ".png");
                                     imgQRCode.Source = new BitmapImage(fileUri);
                                 }));
@@ -587,7 +588,7 @@ namespace AssyChargeSEHC
                 thePrinterConn.Open();
 
                 // This example prints "This is a ZPL test." near the top of the label.
-                string zplData = "^XA^FO40,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQN,2,3,M,7^FD" + strPrint + "AC-42^FS^XZ";
+                string zplData = "^XA^FO40,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQA,2,4,Q,7^FD" + strPrint + "^FS^XZ";
 
                 // Send the data to printer as a byte array.
                 thePrinterConn.Write(Encoding.UTF8.GetBytes(zplData));
@@ -727,7 +728,7 @@ namespace AssyChargeSEHC
                     float[] _arrIRleft = new float[arr3.Length];
 
                     // Vẽ đồ thị sóng
-                    Dispatcher.BeginInvoke(new Action(() =>
+                    Dispatcher.Invoke(new Action(() =>
                     {
                         AddValuesToArrayIR(arr1, _arrIRRight);
                         AddValuesToArrayIR(arr2, _arrIRCenter);
@@ -755,10 +756,11 @@ namespace AssyChargeSEHC
             int countR = 0, countC = 0, countL = 0;
             for (int i = 0; i < arrRight.Length; i++)
             {
-                if (i <= arrRight.Length - 5)
+                if (8.2f <= arrRight[i] && arrRight[i] <= 8.6f)
                 {
-                    if (8.3f <= arrRight[i] && arrRight[i] <= 8.5f)
+                    if (i <= arrRight.Length - 5)
                     {
+
                         if (arrRight[i + 4] >= 0.8f && arrRight[i + 4] <= 1.5f)
                         {
                             countR++;
@@ -774,11 +776,16 @@ namespace AssyChargeSEHC
                             MeasurementValues.Instance().JudgeIRRight = MeasurementValues.Judge.NG;
                         }
                     }
+                    //else
+                    //{
+                    //    MeasurementValues.Instance().IRRight = "Null";
+                    //    MeasurementValues.Instance().JudgeIRRight = MeasurementValues.Judge.NG;
+                    //}
                 }
             }
             for (int i = 0; i < arrCenter.Length; i++)
             {
-                if (8.3f <= arrCenter[i] && arrCenter[i] <= 8.5f)
+                if (8.2f <= arrCenter[i] && arrCenter[i] <= 8.6f)
                 {
                     if (i <= arrCenter.Length - 7)
                     {
@@ -811,11 +818,16 @@ namespace AssyChargeSEHC
                             MeasurementValues.Instance().JudgeIRRight = MeasurementValues.Judge.NG;
                         }
                     }
+                    //else
+                    //{
+                    //    MeasurementValues.Instance().IRCenter = "Null";
+                    //    MeasurementValues.Instance().JudgeIRCenter = MeasurementValues.Judge.NG;
+                    //}
                 }
             }
             for (int i = 0; i < arrLeft.Length; i++)
             {
-                if (8.3f <= arrLeft[i] && arrLeft[i] <= 8.5f)
+                if (8.2f <= arrLeft[i] && arrLeft[i] <= 8.6f)
                 {
                     if (i <= arrLeft.Length - 4)
                     {
@@ -836,6 +848,11 @@ namespace AssyChargeSEHC
                         }
                     }
                 }
+                //else
+                //{
+                //    MeasurementValues.Instance().IRLeft = "Null";
+                //    MeasurementValues.Instance().JudgeIRLeft = MeasurementValues.Judge.NG;
+                //}
             }
             if (MeasurementValues.Instance().JudgeIRRight == MeasurementValues.Judge.OK && MeasurementValues.Instance().JudgeIRCenter == MeasurementValues.Judge.OK &&
                 MeasurementValues.Instance().JudgeIRLeft == MeasurementValues.Judge.OK)
@@ -1151,6 +1168,7 @@ namespace AssyChargeSEHC
             {
                 cbbModelList.SelectedItem = DefaultValues.Instance().ModelName;
                 cbbModelList.ItemsSource = dao.GetModelList();
+                cbbModelList_SelectionChanged(null, null);
             }
         }
         private void Event_PushF3(object sender, ExecutedRoutedEventArgs e)
@@ -1270,6 +1288,14 @@ namespace AssyChargeSEHC
         {
             WdLogin_EventLogin(LoginState.Null, 0);
             Common.Instance().RoleID = 0;
+        }
+
+        private void Event_PushF6(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (Common.Instance().RoleID != 0)
+            {
+                mnuSetCurrent_Click(null, null);
+            }
         }
 
         private void mnuEdit_Click(object sender, RoutedEventArgs e)

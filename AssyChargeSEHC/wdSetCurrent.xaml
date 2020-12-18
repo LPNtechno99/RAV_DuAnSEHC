@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssyChargeSEHC"
         mc:Ignorable="d"
-        Title="wdSetCurrent" Height="180" Width="350" WindowStartupLocation="CenterScreen"
+        Title="wdSetCurrent" Height="200" Width="350" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize" Closing="Window_Closing">
     <StackPanel Margin="10">
         <Label Content="Set Current:" FontSize="16" FontWeight="Bold"/>
         <TextBox x:Name="tbCurrent" Height="30" Margin="0 5 0 0" FontSize="18" FontWeight="Bold"
-                 TextAlignment="Right"/>
-        <Button x:Name="btnSave" Height="45" Margin="0 10 0 0" Content="Save"
+                 TextAlignment="Right" KeyUp="tbCurrent_KeyUp"/>
+        <TextBlock Text="(A)" TextAlignment="Right" FontSize="16" FontWeight="Bold"/>
+        <Button x:Name="btnSave" Height="30" Margin="0 10 0 0" Content="Save"
                 FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center" Click="btnSave_Click"/>
     </StackPanel>
 </Window>

@@ -68,7 +68,7 @@ namespace AssyChargeSEHC
                 + _chargerCur + "-" + paraChargerCur + "-" + DefaultValues.Instance().ChargingCurrentMax + "-" + DefaultValues.Instance().ChargingCurrentMin + "/";
             return _s;
         }
-
+        public string _QRCode { get; set; }
         public string _ModelCode { get; set; }
         public string _Strings { get; set; }
         public string _Time { get; set; }

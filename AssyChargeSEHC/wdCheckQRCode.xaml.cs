@@ -25,28 +25,33 @@ namespace AssyChargeSEHC
         {
             InitializeComponent();
 
-            _keyListener = new LowLevelKeyboardListener();
-            _keyListener.OnKeyPressed += _keyListener_OnKeyPressed;
-            _keyListener.HookKeyboard();
+            //_keyListener = new LowLevelKeyboardListener();
+            //_keyListener.OnKeyPressed += _keyListener_OnKeyPressed;
+            //_keyListener.HookKeyboard();
 
             textboxData.Focus();
-        }
-
-        private void _keyListener_OnKeyPressed(object sender, KeyPressedArgs e)
-        {
-            if(e.KeyPressed == Key.Enter)
-            {
-
-            }
-            else
-            {
-
-            }
         }
 
         private void Event_PushEsc(object sender, ExecutedRoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void textboxData_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                if(textboxData.Text.Trim().CompareTo(Common.Instance()._QRCode) == 0)
+                {
+                    lbResult.Content = "OK";
+                    lbResult.Background = Brushes.Green;
+                }
+                else
+                {
+                    lbResult.Content = "NG";
+                    lbResult.Background = Brushes.Red;
+                }
+            }
         }
     }
 }

@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssyChargeSEHC"
         mc:Ignorable="d"
-        Title="wdCheckQRCode" Height="550" Width="750" WindowStartupLocation="CenterScreen">
+        Title="wdCheckQRCode" Height="550" Width="950" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
     <Window.Resources>
         <RoutedUICommand x:Key="myCommandEsc" Text="text"/>
     </Window.Resources>
@@ -20,7 +21,8 @@
             <RowDefinition Height="1.2*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="textboxData" TextWrapping="Wrap" FontSize="50" FontWeight="Bold" Text="" Margin="10"/>
+        <TextBox x:Name="textboxData" TextWrapping="Wrap" FontSize="26" FontWeight="Bold" Text="" Margin="10"
+                 KeyUp="textboxData_KeyUp"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -28,9 +30,9 @@
             </Grid.RowDefinitions>
             <Label Content="Result" VerticalContentAlignment="Center" HorizontalContentAlignment="Left"
                    FontSize="25" Background="#FF0F258B" Foreground="White"/>
-            <Label Grid.Row="1" FontSize="150" FontWeight="Bold" Content="OK"
+            <Label Grid.Row="1" FontSize="150" FontWeight="Bold" Foreground="White"
                VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-               BorderBrush="Black" BorderThickness="1"/>
+               BorderBrush="Black" BorderThickness="1" Name="lbResult"/>
         </Grid>
     </Grid>
 </Window>
