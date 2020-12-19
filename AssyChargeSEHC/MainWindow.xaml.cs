@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Newtonsoft.Json;
 using System.Windows.Threading;
 using Zebra.Sdk.Comm;
 using ZedGraph;
@@ -257,6 +258,225 @@ namespace AssyChargeSEHC
                 COM_MeasureVolCur.Close();
             }));
         }
+        /// <summary>
+        /// ma hoa nam thang ngay
+        /// </summary>
+        /// <returns></returns>
+        private string EncoderDateNotation()
+        {
+            string s = "";
+            string year = DateTime.Now.ToString("yy");
+            string month = DateTime.Now.ToString("MM");
+            string day = DateTime.Now.ToString("dd");
+            switch (year)
+            {
+                case "20":
+                    s += "N";
+                    break;
+                case "21":
+                    s += "R";
+                    break;
+                case "22":
+                    s += "T";
+                    break;
+                case "23":
+                    s += "W";
+                    break;
+                case "24":
+                    s += "X";
+                    break;
+                case "25":
+                    s += "Y";
+                    break;
+                case "26":
+                    s += "L";
+                    break;
+                case "27":
+                    s += "M";
+                    break;
+                case "28":
+                    s += "Q";
+                    break;
+                case "29":
+                    s += "S";
+                    break;
+                case "30":
+                    s += "Z";
+                    break;
+                case "31":
+                    s += "B";
+                    break;
+                case "32":
+                    s += "C";
+                    break;
+                case "33":
+                    s += "D";
+                    break;
+                case "34":
+                    s += "F";
+                    break;
+                case "35":
+                    s += "G";
+                    break;
+                case "36":
+                    s += "H";
+                    break;
+                case "37":
+                    s += "J";
+                    break;
+                case "38":
+                    s += "K";
+                    break;
+                case "39":
+                    s += "M";
+                    break;
+                case "40":
+                    s += "N";
+                    break;
+                default:
+                    break;
+            }
+            switch (month)
+            {
+                case "01":
+                    s += "1";
+                    break;
+                case "02":
+                    s += "2";
+                    break;
+                case "03":
+                    s += "3";
+                    break;
+                case "04":
+                    s += "4";
+                    break;
+                case "05":
+                    s += "5";
+                    break;
+                case "06":
+                    s += "6";
+                    break;
+                case "07":
+                    s += "7";
+                    break;
+                case "08":
+                    s += "8";
+                    break;
+                case "09":
+                    s += "9";
+                    break;
+                case "10":
+                    s += "A";
+                    break;
+                case "11":
+                    s += "B";
+                    break;
+                case "12":
+                    s += "C";
+                    break;
+                default:
+                    break;
+            }
+            switch (day)
+            {
+                case "01":
+                    s += "1";
+                    break;
+                case "02":
+                    s += "2";
+                    break;
+                case "03":
+                    s += "3";
+                    break;
+                case "04":
+                    s += "4";
+                    break;
+                case "05":
+                    s += "5";
+                    break;
+                case "06":
+                    s += "6";
+                    break;
+                case "07":
+                    s += "7";
+                    break;
+                case "08":
+                    s += "8";
+                    break;
+                case "09":
+                    s += "9";
+                    break;
+                case "10":
+                    s += "10";
+                    break;
+                case "11":
+                    s += "11";
+                    break;
+                case "12":
+                    s += "12";
+                    break;
+                case "13":
+                    s += "13";
+                    break;
+                case "14":
+                    s += "14";
+                    break;
+                case "15":
+                    s += "15";
+                    break;
+                case "16":
+                    s += "G";
+                    break;
+                case "17":
+                    s += "H";
+                    break;
+                case "18":
+                    s += "J";
+                    break;
+                case "19":
+                    s += "K";
+                    break;
+                case "20":
+                    s += "L";
+                    break;
+                case "21":
+                    s += "M";
+                    break;
+                case "22":
+                    s += "N";
+                    break;
+                case "23":
+                    s += "P";
+                    break;
+                case "24":
+                    s += "R";
+                    break;
+                case "25":
+                    s += "S";
+                    break;
+                case "26":
+                    s += "T";
+                    break;
+                case "27":
+                    s += "V";
+                    break;
+                case "28":
+                    s += "W";
+                    break;
+                case "29":
+                    s += "X";
+                    break;
+                case "30":
+                    s += "Y";
+                    break;
+                case "31":
+                    s += "Z";
+                    break;
+                default:
+                    break;
+            }
+            return s;
+        }
         //void Fake_Run()
         //{
         //    if (!_flag)
@@ -380,7 +600,7 @@ namespace AssyChargeSEHC
                         {
                             Dispatcher.Invoke(new Action(() =>
                             {
-                                txtMessage.Text = "RUNNING...\n\t1. Checking Standby Voltage";
+                                txtMessage.Text = "RUNNING...\n\t1. Checking Standby Voltage...";
                             }));
                             COM_MeasureVolCur.Open();
                             await Wait1Second();
@@ -393,13 +613,14 @@ namespace AssyChargeSEHC
                         {
                             Dispatcher.Invoke(new Action(() =>
                             {
-                                txtMessage.Text += "\n\t2. Checking Charging Volatge and Charging Current";
+                                txtMessage.Text += "\n\n\t2. Checking Charging Volatge\n\tand Charging Current...";
                             }));
-                            COM_MeasureVolCur.Write(_commandONOFF, 0, _commandONOFF.Length);
-                            await Wait1Second();
                             COM_IR.Write("1");
+                            await Wait500MiliSecond();
+                            COM_MeasureVolCur.Write(_commandONOFF, 0, _commandONOFF.Length);
                             await Wait2Second();
-                            await Wait1500MiliSecond();
+                            await Wait1Second();
+                            //await Wait500MiliSecond();
                             _Done1 = false;
                             _flagStartRead = true;
                         }
@@ -409,7 +630,7 @@ namespace AssyChargeSEHC
                         {
                             Dispatcher.Invoke(new Action(() =>
                             {
-                                txtMessage.Text += "\n\t3. Checking IR";
+                                txtMessage.Text += "\n\n\t3. Checking IR...";
                             }));
                             if (!COM_IR.IsOpen)
                                 COM_IR.Open();
@@ -427,7 +648,7 @@ namespace AssyChargeSEHC
                         {
                             Dispatcher.Invoke(new Action(() =>
                             {
-                                txtMessage.Text += "\n\t4. Waiting Final Judge...";
+                                txtMessage.Text += "\n\n\t4. Waiting Final Judge...";
                             }));
                             COM_MeasureVolCur.Write(_commandONOFF, 0, _commandONOFF.Length);
                             await Wait1Second();
@@ -445,13 +666,17 @@ namespace AssyChargeSEHC
                                 Common.Instance().CountNG += 1;
                             }
                             //Ghi dữ liệu vào file báo cáo Excel
-                            if (_myDataTemplateWorkSheet != null)
+                            try
                             {
-                                DefaultValues.Instance().ID++;
-                                _CountDataInTemplate += 1;
-                                var tempRange = (Excel.Range)_myDataTemplateWorkSheet.Cells[_CountDataInTemplate, 1];
-                                ExcelTemplateInput(tempRange);
+                                if (_myDataTemplateWorkSheet != null)
+                                {
+                                    DefaultValues.Instance().ID++;
+                                    _CountDataInTemplate += 1;
+                                    var tempRange = (Excel.Range)_myDataTemplateWorkSheet.Cells[_CountDataInTemplate, 1];
+                                    ExcelTemplateInput(tempRange);
+                                }
                             }
+                            catch (Exception ex) { MessageBox.Show(ex.Message); }
                             //Cập nhật dữ liệu Counter
                             using (var dao = new UserDAO())
                             {
@@ -465,7 +690,7 @@ namespace AssyChargeSEHC
                             {
                                 // Gửi dữ liệu cho máy in QRCode
                                 Common.Instance()._ModelCode = DefaultValues.Instance().ModelName;
-                                Common.Instance()._Strings = DefaultValues.Instance().ModelName;
+                                Common.Instance()._Strings = EncoderDateNotation() + Common.Instance().CountOK;
                                 Common.Instance()._Time = DateTime.Now.ToString("yyyyMMddHHmmss");
 
                                 Common.Instance()._QRCode = Common.Instance().QRCodeString(DefaultValues.Instance().IRLeft, DefaultValues.Instance().IRCenter, DefaultValues.Instance().IRRight,
@@ -473,20 +698,27 @@ namespace AssyChargeSEHC
                                 await Wait1Second();
                                 SendZplOverTcp(PrinterIPAddress, DefaultValues.Instance().ModelName, Common.Instance()._QRCode);
 
-                                Dispatcher.Invoke(new Action(() =>
-                                {
-                                    string _t = DateTime.Now.ToString("ddMMyyyyHHmmssfff");
-                                    QRCodeWriter.CreateQrCode(Common.Instance()._QRCode, 500, QRCodeWriter.QrErrorCorrectionLevel.Medium).SaveAsPng("D:\\Data\\QRCode\\mQRCode" + _t + ".png");
-                                    Uri fileUri = new Uri("D:\\Data\\QRCode\\mQRCode" + _t + ".png");
-                                    imgQRCode.Source = new BitmapImage(fileUri);
-                                }));
+                                //Application.Current.Dispatcher.Invoke((Action)delegate
+                                // {
+                                //     try
+                                //     {
+                                //         string _t = DateTime.Now.ToString("ddMMyyyyHHmmssfff");
+                                //         QRCodeWriter.CreateQrCode(Common.Instance()._QRCode, 500, QRCodeWriter.QrErrorCorrectionLevel.Medium).SaveAsPng("D:\\Data\\QRCode\\mQRCode" + _t + ".png");
+                                //         Uri fileUri = new Uri("D:\\Data\\QRCode\\mQRCode" + _t + ".png");
+                                //         imgQRCode.Source = new BitmapImage(fileUri);
+                                //     }
+                                //     catch (Exception ex)
+                                //     { MessageBox.Show(ex.Message); }
+                                //     txtMessage.Text = "END!";
+                                // });
                             }
-                            _flagIR = false;
-                            _flagSetIni = true;
-                            Dispatcher.Invoke(new Action(() =>
+                            Application.Current.Dispatcher.Invoke((Action)delegate
                             {
                                 txtMessage.Text = "END!";
-                            }));
+                            });
+                            _flagIR = false;
+                            _flagSetIni = true;
+
                         }
                         // Gửi dữ liệu cho PLC đưa cơ cấu lại vị trí bắt đầu, (đặt giá trị thanh ghi về O)
                         //_currentProgram = 0;
@@ -588,7 +820,7 @@ namespace AssyChargeSEHC
                 thePrinterConn.Open();
 
                 // This example prints "This is a ZPL test." near the top of the label.
-                string zplData = "^XA^FO40,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQA,2,4,Q,7^FD" + strPrint + "^FS^XZ";
+                string zplData = "^XA^FO40,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQA,2,3,Q,7^FDQA" + strPrint + "^FS^XZ";
 
                 // Send the data to printer as a byte array.
                 thePrinterConn.Write(Encoding.UTF8.GetBytes(zplData));
@@ -658,8 +890,12 @@ namespace AssyChargeSEHC
                     {
                         continue;
                     }
+                    
                     MeasurementValues.Instance().Voltage = ((float)bytearr1[i - 31] * 256 + (float)bytearr1[i - 30]) / 10f;
                     MeasurementValues.Instance().Current = ((float)bytearr1[i - 28] * 0.25f) + ((float)bytearr1[i - 27]) / 1000f;
+
+                    //MeasurementValues.Instance().Voltage = ((float)bytearr1[i + 36 + 5] * 256 + (float)bytearr1[i +36 + 6]) / 10f;
+                    //MeasurementValues.Instance().Current = ((float)bytearr1[i + 36 + 8] * 0.25f) + ((float)bytearr1[i +36 + 9]) / 1000f;
 
                     if (MeasurementValues.Instance().Voltage > DefaultValues.Instance().ChargingVoltageMin
                         && MeasurementValues.Instance().Voltage < DefaultValues.Instance().ChargingVoltageMax)
@@ -1205,6 +1441,7 @@ namespace AssyChargeSEHC
                 DefaultValues.Instance().ChargingCurrentMin = float.Parse(_s[0].ChargingCurrentMin);
                 DefaultValues.Instance().ChargingCurrentMax = float.Parse(_s[0].ChargingCurrentMax);
             }
+            this.Focus();
         }
 
         private void mnuSetCurrent_Click(object sender, RoutedEventArgs e)

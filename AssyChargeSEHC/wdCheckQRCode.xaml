@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AssyChargeSEHC"
         mc:Ignorable="d"
-        Title="wdCheckQRCode" Height="550" Width="950" WindowStartupLocation="CenterScreen"
+        Title="wdCheckQRCode" Height="450" Width="1450" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     <Window.Resources>
         <RoutedUICommand x:Key="myCommandEsc" Text="text"/>
@@ -18,10 +18,10 @@
     </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1.2*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="textboxData" TextWrapping="Wrap" FontSize="26" FontWeight="Bold" Text="" Margin="10"
+        <TextBox x:Name="textboxData" TextWrapping="Wrap" FontSize="18" FontWeight="Bold" Text="" Margin="10"
                  KeyUp="textboxData_KeyUp"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>

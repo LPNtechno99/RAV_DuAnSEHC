@@ -358,8 +358,8 @@
                         <RowDefinition Height="5*"/>
                     </Grid.RowDefinitions>
                     <Label Style="{StaticResource labelStyle}" Content="Test Message"/>
-                    <TextBox Padding="5" Name="txtMessage" Grid.Row="1" Background="#FF3C668F"
-                             Foreground="White" FontSize="12" FontWeight="Bold" AcceptsReturn="True"/>
+                    <TextBox Padding="15 15 0 0" Name="txtMessage" Grid.Row="1" Background="#FF3C668F"
+                             Foreground="White" FontSize="14" FontWeight="Bold" AcceptsReturn="True"/>
                 </Grid>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>

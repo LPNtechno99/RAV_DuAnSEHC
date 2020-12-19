@@ -1,0 +1,13 @@
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\AssyChargeSEHC.csproj.ResolveComReference.cache
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\MainWindow.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\wdAddModel.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\wdChangePassword.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\wdCheckQRCode.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\wdLogin.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\wdSetCurrent.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\wdSystemLogs.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\App.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\AssyChargeSEHC_Content.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\GeneratedInternalTypeHelper.g.cs
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\AssyChargeSEHC_MarkupCompile.cache
+D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (18-12-2020)\AssyChargeSEHC\obj\Release\AssyChargeSEHC_MarkupCompile.lref
