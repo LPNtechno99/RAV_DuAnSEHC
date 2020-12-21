@@ -69,13 +69,10 @@ namespace AssyChargeSEHC
             }
         }
 
-        public string QRCodeString(string paraIRLeft, string paraIRCenter, string paraIRRight, string paraStandbyVol, string paraChargerVol, string paraChargerCur)
+        public string QRCodeString(string paraStandbyVol, string paraChargerVol, string paraChargerCur)
         {
             string _s = "";
             _s = _Strings + "/"
-                + _IRLeft + "-" + paraIRLeft + "/"
-                + _IRCenter + "-" + paraIRCenter + "/"
-                + _IRRight + "-" + paraIRRight + "/"
                 + _standbyVol + "-" + paraStandbyVol + "-" + DefaultValues.Instance().StandbyVoltageMax + "-" + DefaultValues.Instance().StandbyVoltageMin + "/"
                 + _chargerVol + "-" + paraChargerVol + "-" + DefaultValues.Instance().ChargingVoltageMax + "-" + DefaultValues.Instance().ChargingVoltageMin + "/"
                 + _chargerCur + "-" + paraChargerCur + "-" + DefaultValues.Instance().ChargingCurrentMax + "-" + DefaultValues.Instance().ChargingCurrentMin + "/";

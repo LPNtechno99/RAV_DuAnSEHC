@@ -64,12 +64,12 @@ namespace AssyChargeSEHC
         {
             InitializeComponent();
 
-            Common.Instance().ProductID = ComputerInfo.GetComputerId();
-            CheckKeyActive(Common.Instance().ProductID, ref _ExpirationDay, ref _type);
-            if (_ExpirationDay <= 0 && _type == LicenseType.TRIAL)
-            {
-                return;
-            }
+            //Common.Instance().ProductID = ComputerInfo.GetComputerId();
+            //CheckKeyActive(Common.Instance().ProductID, ref _ExpirationDay, ref _type);
+            //if (_ExpirationDay <= 0 && _type == LicenseType.TRIAL)
+            //{
+            //    return;
+            //}
 
             InitialGraph();
             //Binding
@@ -104,9 +104,9 @@ namespace AssyChargeSEHC
             this.lblStartTime.DataContext = DefaultValues.Instance();
             this.lblEndTime.DataContext = DefaultValues.Instance();
 
-            //StartAppExcel();
-            //InitializeCOM_PLC();
-            //Initial_Get_CounterAmount();
+            StartAppExcel();
+            InitializeCOM_PLC();
+            Initial_Get_CounterAmount();
 
         }
         private void CheckKeyActive(string productID, ref int ExpirationDay, ref LicenseType type)
@@ -274,6 +274,9 @@ namespace AssyChargeSEHC
                 MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.None;
 
                 MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.None;
+
+                DefaultValues.Instance().StartTime = "--:--:--";
+                DefaultValues.Instance().EndTime = "--:--:--";
 
                 //imgQRCode.Source = null;
                 //imgQRCode.InvalidateVisual();
@@ -629,7 +632,7 @@ namespace AssyChargeSEHC
 
                         if (!COM_MeasureVolCur.IsOpen)
                         {
-                            DefaultValues.Instance().StartTime = DateTime.Now.ToString("yyyMMddHHmmss");
+                            DefaultValues.Instance().StartTime = DateTime.Now.ToString("yyyyMMddHHmmss");
                             Dispatcher.Invoke(new Action(() =>
                             {
                                 txtMessage.Text = "RUNNING...\n\t1. Checking Standby Voltage...";
@@ -660,32 +663,21 @@ namespace AssyChargeSEHC
 
                         break;
                     case 3:
-                        if (chbIRLeft.IsChecked == true && chbIRRight.IsChecked == true && chbIRCenter.IsChecked == true)
+                        if (_Done2)
                         {
-                            if (_Done2)
+                            Dispatcher.Invoke(new Action(() =>
                             {
-                                Dispatcher.Invoke(new Action(() =>
-                                {
-                                    txtMessage.Text += "\n\n\t3. Checking IR...";
-                                }));
-                                if (!COM_IR.IsOpen)
-                                    COM_IR.Open();
-                                COM_IR.Write("0");
-                                await Wait2Second();
-                                COM_IR.Write("2");
-                                _Done2 = false;
-                                _flagIR = true;
-                            }
+                                txtMessage.Text += "\n\n\t3. Checking IR...";
+                            }));
+                            if (!COM_IR.IsOpen)
+                                COM_IR.Open();
+                            COM_IR.Write("0");
+                            await Wait2Second();
+                            COM_IR.Write("2");
+                            _Done2 = false;
+                            _flagIR = true;
                         }
-                        else
-                        {
-                            MeasurementValues.Instance().IRCenter = DefaultValues.Instance().IRCenter;
-                            MeasurementValues.Instance().JudgeIRCenter = MeasurementValues.Judge.OK;
-                            MeasurementValues.Instance().IRRight = DefaultValues.Instance().IRRight;
-                            MeasurementValues.Instance().JudgeIRRight = MeasurementValues.Judge.OK;
-                            MeasurementValues.Instance().IRLeft = DefaultValues.Instance().IRLeft;
-                            MeasurementValues.Instance().JudgeIRLeft = MeasurementValues.Judge.OK;
-                        }
+
                         break;
                     case 4:
                         // Đánh giá kết quả cuối cùng
@@ -740,19 +732,18 @@ namespace AssyChargeSEHC
                                     dao.EditCounterAmount(dt, Common.Instance().CountOK, Common.Instance().CountNG, Common.Instance().CountTotal);
                                 }
                             }
-                            DefaultValues.Instance().EndTime = DateTime.Now.ToString("yyyMMddHHmmss");
+                            DefaultValues.Instance().EndTime = DateTime.Now.ToString("yyyyMMddHHmmss");
                             if (MeasurementValues.Instance().JudgeFinal == MeasurementValues.Judge.OK)
                             {
                                 // Gửi dữ liệu cho máy in QRCode
 
                                 Common.Instance()._Strings = DefaultValues.Instance().UnitCode + DefaultValues.Instance().MaterialCode + DefaultValues.Instance().SupplierCode +
-                                    EncoderDateNotation() + _sCountOK + "QR" + DefaultValues.Instance().CountryCode + DefaultValues.Instance().ProductionLine + "/" +
-                                    DefaultValues.Instance().InspecEquipNumber + DefaultValues.Instance().NumberOfInspecItem +
+                                    EncoderDateNotation() + _sCountOK + "QR" + DefaultValues.Instance().CountryCode + DefaultValues.Instance().ProductionLine +
+                                    DefaultValues.Instance().InspecEquipNumber + DefaultValues.Instance().NumberOfInspecItem + "/" +
                                     DefaultValues.Instance().StartTime + "/" + DefaultValues.Instance().EndTime;
                                 Common.Instance()._Time = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-                                Common.Instance()._QRCode = Common.Instance().QRCodeString(DefaultValues.Instance().IRLeft, DefaultValues.Instance().IRCenter, DefaultValues.Instance().IRRight,
-                                    MeasurementValues.Instance().VoltageStandby.ToString(), MeasurementValues.Instance().Voltage.ToString(), MeasurementValues.Instance().Current.ToString());
+                                Common.Instance()._QRCode = Common.Instance().QRCodeString(MeasurementValues.Instance().VoltageStandby.ToString(), MeasurementValues.Instance().Voltage.ToString(), MeasurementValues.Instance().Current.ToString());
                                 await Wait1Second();
                                 SendZplOverTcp(PrinterIPAddress, DefaultValues.Instance().MaterialCode, Common.Instance()._QRCode);
 
@@ -878,7 +869,7 @@ namespace AssyChargeSEHC
                 thePrinterConn.Open();
 
                 // This example prints "This is a ZPL test." near the top of the label.
-                string zplData = "^XA^FO40,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQA,2,4,Q,7^FD,LA" + strPrint + "^FS^XZ";
+                string zplData = "^XA^FO45,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQA,2,4,Q,7^FD,LA" + strPrint + "^FS^XZ";
 
                 // Send the data to printer as a byte array.
                 thePrinterConn.Write(Encoding.UTF8.GetBytes(zplData));
@@ -901,103 +892,108 @@ namespace AssyChargeSEHC
 
             if (_flagStartRead == true && _currentProgram == 1)
             {
-                if (chbStandbyVol.IsChecked == true)
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    if (chbStandbyVol.IsChecked == true)
+                    {
+                        //COM_MeasureVolCur.DataReceived -= COM_MeasureVolCur_DataReceived;
+                        int count1 = COM_MeasureVolCur.BytesToRead;
+                        byte[] bytearr1 = new byte[count1];
+                        COM_MeasureVolCur.Read(bytearr1, 0, count1);
+
+                        for (int i = 0; i < bytearr1.Length; i++)
+                        {
+                            if (bytearr1[i] != 255)
+                            {
+                                continue;
+                            }
+                            // Đánh giá OK NG
+                            if (_currentProgram == 1 && _Done1 == false)
+                            {
+                                MeasurementValues.Instance().VoltageStandby = (float)bytearr1[i + 6] / 10f;
+                                if (MeasurementValues.Instance().VoltageStandby > DefaultValues.Instance().StandbyVoltageMin
+                                    && MeasurementValues.Instance().VoltageStandby < DefaultValues.Instance().StandbyVoltageMax)
+                                    MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.OK;
+                                else
+                                    MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.NG;
+
+                                Array.Clear(bytearr1, 0, bytearr1.Length);
+
+                            }
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        MeasurementValues.Instance().VoltageStandby = 0.0f;
+                        MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.OK;
+                    }
+                    _Done1 = true;
+                    _flagStartRead = false;
+                }));
+            }
+            if (_flagStartRead == true && _currentProgram == 2)
+            {
+                Dispatcher.Invoke(new Action(() =>
                 {
                     //COM_MeasureVolCur.DataReceived -= COM_MeasureVolCur_DataReceived;
                     int count1 = COM_MeasureVolCur.BytesToRead;
-                    byte[] bytearr1 = new byte[count1];
-                    COM_MeasureVolCur.Read(bytearr1, 0, count1);
-
+                    int[] bytearr1 = new int[count1];
                     for (int i = 0; i < bytearr1.Length; i++)
+                    {
+                        bytearr1[i] = COM_MeasureVolCur.ReadByte();
+                    }
+                    //COM_MeasureVolCur.Read(bytearr1, 0, count1);
+
+                    for (int i = bytearr1.Length - 1; i > 0; i--)
                     {
                         if (bytearr1[i] != 255)
                         {
                             continue;
                         }
-                        // Đánh giá OK NG
-                        if (_currentProgram == 1 && _Done1 == false)
+
+                        if (chbCharVol.IsChecked == true)
                         {
-                            MeasurementValues.Instance().VoltageStandby = (float)bytearr1[i + 6] / 10f;
-                            if (MeasurementValues.Instance().VoltageStandby > DefaultValues.Instance().StandbyVoltageMin
-                                && MeasurementValues.Instance().VoltageStandby < DefaultValues.Instance().StandbyVoltageMax)
-                                MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.OK;
+                            MeasurementValues.Instance().Voltage = ((float)bytearr1[i - 31] * 256 + (float)bytearr1[i - 30]) / 10f;
+                            if (MeasurementValues.Instance().Voltage > DefaultValues.Instance().ChargingVoltageMin
+                        && MeasurementValues.Instance().Voltage < DefaultValues.Instance().ChargingVoltageMax)
+                                MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
                             else
-                                MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.NG;
-
-                            Array.Clear(bytearr1, 0, bytearr1.Length);
-
+                                MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.NG;
                         }
+                        else
+                        {
+                            MeasurementValues.Instance().Voltage = 0.0f;
+                            //labelVoltage.Content = "No Check";
+                            MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
+                        }
+                        if (chbCharCur.IsChecked == true)
+                        {
+                            MeasurementValues.Instance().Current = ((float)bytearr1[i - 28] * 0.25f) + ((float)bytearr1[i - 27]) / 1000f;
+                            if (MeasurementValues.Instance().Current < DefaultValues.Instance().ChargingCurrentMin
+                                || MeasurementValues.Instance().Current > DefaultValues.Instance().ChargingCurrentMax)
+                            {
+                                MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.NG;
+                            }
+                            else
+                                MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
+                        }
+                        else
+                        {
+                            MeasurementValues.Instance().Current = 0.00f;
+                            //labelCurrent.Content = "No Check";
+                            MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
+                        }
+
+                        //MeasurementValues.Instance().Voltage = ((float)bytearr1[i + 36 + 5] * 256 + (float)bytearr1[i +36 + 6]) / 10f;
+                        //MeasurementValues.Instance().Current = ((float)bytearr1[i + 36 + 8] * 0.25f) + ((float)bytearr1[i +36 + 9]) / 1000f;
+
+                        Array.Clear(bytearr1, 0, bytearr1.Length);
                         break;
                     }
-                }
-                else
-                {
-                    MeasurementValues.Instance().VoltageStandby = 7.5f;
-                    labelVoltageStandby.Content = "No Check";
-                    MeasurementValues.Instance().JudgeVoltageStandby = MeasurementValues.Judge.OK;
-                }
-                _Done1 = true;
-                _flagStartRead = false;
-            }
-            if (_flagStartRead == true && _currentProgram == 2)
-            {
-                //COM_MeasureVolCur.DataReceived -= COM_MeasureVolCur_DataReceived;
-                int count1 = COM_MeasureVolCur.BytesToRead;
-                int[] bytearr1 = new int[count1];
-                for (int i = 0; i < bytearr1.Length; i++)
-                {
-                    bytearr1[i] = COM_MeasureVolCur.ReadByte();
-                }
-                //COM_MeasureVolCur.Read(bytearr1, 0, count1);
-
-                for (int i = bytearr1.Length - 1; i > 0; i--)
-                {
-                    if (bytearr1[i] != 255)
-                    {
-                        continue;
-                    }
-
-                    if (chbCharVol.IsChecked == true)
-                    {
-                        MeasurementValues.Instance().Voltage = ((float)bytearr1[i - 31] * 256 + (float)bytearr1[i - 30]) / 10f;
-                        if (MeasurementValues.Instance().Voltage > DefaultValues.Instance().ChargingVoltageMin
-                    && MeasurementValues.Instance().Voltage < DefaultValues.Instance().ChargingVoltageMax)
-                            MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
-                        else
-                            MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.NG;
-                    }
-                    else
-                    {
-                        MeasurementValues.Instance().Voltage = 24.5f;
-                        labelVoltage.Content = "No Check";
-                        MeasurementValues.Instance().JudgeVoltage = MeasurementValues.Judge.OK;
-                    }
-                    if (chbCharCur.IsChecked == true)
-                    {
-                        MeasurementValues.Instance().Current = ((float)bytearr1[i - 28] * 0.25f) + ((float)bytearr1[i - 27]) / 1000f;
-                        if (MeasurementValues.Instance().Current < DefaultValues.Instance().ChargingCurrentMin
-                            || MeasurementValues.Instance().Current > DefaultValues.Instance().ChargingCurrentMax)
-                        {
-                            MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.NG;
-                        }
-                        else
-                            MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
-                    }
-                    else
-                    {
-                        MeasurementValues.Instance().Current = 1.00f;
-                        labelCurrent.Content = "No Check";
-                        MeasurementValues.Instance().JudgeCurrent = MeasurementValues.Judge.OK;
-                    }
-
-                    //MeasurementValues.Instance().Voltage = ((float)bytearr1[i + 36 + 5] * 256 + (float)bytearr1[i +36 + 6]) / 10f;
-                    //MeasurementValues.Instance().Current = ((float)bytearr1[i + 36 + 8] * 0.25f) + ((float)bytearr1[i +36 + 9]) / 1000f;
-
-                    Array.Clear(bytearr1, 0, bytearr1.Length);
-                    break;
-                }
-                _Done2 = true;
-                _flagStartRead = false;
+                    _Done2 = true;
+                    _flagStartRead = false;
+                }));
             }
         }
         bool _flagIR;
@@ -1005,72 +1001,88 @@ namespace AssyChargeSEHC
         {
             if (_flagIR)
             {
-                //COM_IR.DataReceived -= COM_IR_DataReceived;
-                //string tempRecieveString = "IR,44,32,14,8,9,16,85,43,33,14,7,10,16,85,43,32,22,10,16,85,44,32,23,9,16,85,43,33,22,10,16,85,43,32,22,10,16,85,43,32,22,10,16,85,43,32,23,9,16,85,IC,44,10,11,10,21,10,16,85,43,10,11,10,21,10,16,85,43,10,10,10,21,10,16,85,43,10,10,10,21,10,16,85,43,10,11,10,21,10,16,85,0,44,10,11,10,21,10,16,85,43,IL,32,13,19,17,85,44,32,13,19,16,85,44,32,13,19,17,85,44,32,13,19,16,0,85,44,32,14,18,16,85,44,32,13,19,17,85,44,32,13,19,16,85,44,32,13,18,17,85,44,32,IE";
-                Thread.Sleep(100);
-                string tempRecieveString = "";
-                //tempRecieveString = COM_IR.ReadTo("IE") + "IE";
-                try
+                Dispatcher.Invoke(new Action(() =>
                 {
-                    tempRecieveString = COM_IR.ReadExisting();
-                }
-                catch
-                {
-
-                }
-                if (tempRecieveString.IndexOf("IE") >= 0)
-                {
-
-                    tempRecieveString = _strReceiveCOM_IR + tempRecieveString;
-                    _strReceiveCOM_IR = "";
-
-                    int index1 = tempRecieveString.IndexOf("IR");
-                    int index2 = tempRecieveString.IndexOf("IC");
-                    int index3 = tempRecieveString.IndexOf("IL");
-                    int index4 = tempRecieveString.IndexOf("IE");
-
-                    string temp1 = tempRecieveString.Substring(index1, index2 + 2);
-                    //_strIRRight = temp1.Substring(temp1.IndexOf(""), temp1.LastIndexOf("85") - temp1.IndexOf("85") - 1);
-                    string temp2 = tempRecieveString.Substring(index2, index3 - index2 + 2);
-                    //_strIRCenter = temp2.Substring(temp2.IndexOf("85"), temp2.LastIndexOf("85") - temp2.IndexOf("85") - 1);
-                    string temp3 = tempRecieveString.Substring(index3, index4 - index3 + 2);
-                    //_strIRLeft = temp3.Substring(temp3.IndexOf("85"), temp3.LastIndexOf("85") - temp3.IndexOf("85") - 1);
-
-                    string[] arr1 = temp1.Split(',');
-                    string[] arr2 = temp2.Split(',');
-                    string[] arr3 = temp3.Split(',');
-
-                    List<float> lst1 = new List<float>();
-                    List<float> lst2 = new List<float>();
-                    List<float> lst3 = new List<float>();
-
-                    float[] _arrIRRight = new float[arr1.Length];
-                    float[] _arrIRCenter = new float[arr2.Length];
-                    float[] _arrIRleft = new float[arr3.Length];
-
-                    // Vẽ đồ thị sóng
-                    Dispatcher.Invoke(new Action(() =>
+                    if (chbIRLeft.IsChecked == true && chbIRRight.IsChecked == true && chbIRCenter.IsChecked == true)
                     {
-                        AddValuesToArrayIR(arr1, _arrIRRight, lst1);
-                        AddValuesToArrayIR(arr2, _arrIRCenter, lst2);
-                        AddValuesToArrayIR(arr3, _arrIRleft, lst3);
+                        //COM_IR.DataReceived -= COM_IR_DataReceived;
+                        //string tempRecieveString = "IR,44,32,14,8,9,16,85,43,33,14,7,10,16,85,43,32,22,10,16,85,44,32,23,9,16,85,43,33,22,10,16,85,43,32,22,10,16,85,43,32,22,10,16,85,43,32,23,9,16,85,IC,44,10,11,10,21,10,16,85,43,10,11,10,21,10,16,85,43,10,10,10,21,10,16,85,43,10,10,10,21,10,16,85,43,10,11,10,21,10,16,85,0,44,10,11,10,21,10,16,85,43,IL,32,13,19,17,85,44,32,13,19,16,85,44,32,13,19,17,85,44,32,13,19,16,0,85,44,32,14,18,16,85,44,32,13,19,17,85,44,32,13,19,16,85,44,32,13,18,17,85,44,32,IE";
+                        Thread.Sleep(100);
+                        string tempRecieveString = "";
+                        //tempRecieveString = COM_IR.ReadTo("IE") + "IE";
+                        try
+                        {
+                            tempRecieveString = COM_IR.ReadExisting();
+                        }
+                        catch
+                        {
 
-                        // Đánh giá kết quả OK NG
-                        //CheckDataIR_OKNG(_arrIRRight, _arrIRCenter, _arrIRleft);
-                        CheckIROKNG(lst1, lst2, lst3);
+                        }
+                        if (tempRecieveString.IndexOf("IE") >= 0)
+                        {
 
-                        DrawGraph(lst1, graphIRRight);
-                        realtime = 0;
-                        DrawGraph(lst2, graphIRCenter);
-                        realtime = 0;
-                        DrawGraph(lst3, graphIRLeft);
-                        realtime = 0;
-                    }));
-                }
-                else
-                {
-                    _strReceiveCOM_IR += tempRecieveString;
-                }
+                            tempRecieveString = _strReceiveCOM_IR + tempRecieveString;
+                            _strReceiveCOM_IR = "";
+
+                            int index1 = tempRecieveString.IndexOf("IR");
+                            int index2 = tempRecieveString.IndexOf("IC");
+                            int index3 = tempRecieveString.IndexOf("IL");
+                            int index4 = tempRecieveString.IndexOf("IE");
+
+                            string temp1 = tempRecieveString.Substring(index1, index2 + 2);
+                            //_strIRRight = temp1.Substring(temp1.IndexOf(""), temp1.LastIndexOf("85") - temp1.IndexOf("85") - 1);
+                            string temp2 = tempRecieveString.Substring(index2, index3 - index2 + 2);
+                            //_strIRCenter = temp2.Substring(temp2.IndexOf("85"), temp2.LastIndexOf("85") - temp2.IndexOf("85") - 1);
+                            string temp3 = tempRecieveString.Substring(index3, index4 - index3 + 2);
+                            //_strIRLeft = temp3.Substring(temp3.IndexOf("85"), temp3.LastIndexOf("85") - temp3.IndexOf("85") - 1);
+
+                            string[] arr1 = temp1.Split(',');
+                            string[] arr2 = temp2.Split(',');
+                            string[] arr3 = temp3.Split(',');
+
+                            List<float> lst1 = new List<float>();
+                            List<float> lst2 = new List<float>();
+                            List<float> lst3 = new List<float>();
+
+                            float[] _arrIRRight = new float[arr1.Length];
+                            float[] _arrIRCenter = new float[arr2.Length];
+                            float[] _arrIRleft = new float[arr3.Length];
+
+                            // Vẽ đồ thị sóng
+
+                            AddValuesToArrayIR(arr1, _arrIRRight, lst1);
+                            AddValuesToArrayIR(arr2, _arrIRCenter, lst2);
+                            AddValuesToArrayIR(arr3, _arrIRleft, lst3);
+
+                            // Đánh giá kết quả OK NG
+                            //CheckDataIR_OKNG(_arrIRRight, _arrIRCenter, _arrIRleft);
+                            CheckIROKNG(lst1, lst2, lst3);
+                            //Dispatcher.Invoke(new Action(() =>
+                            //{
+                            DrawGraph(lst1, graphIRRight);
+                            realtime = 0;
+                            DrawGraph(lst2, graphIRCenter);
+                            realtime = 0;
+                            DrawGraph(lst3, graphIRLeft);
+                            realtime = 0;
+                            //}));
+                        }
+                        else
+                        {
+                            _strReceiveCOM_IR += tempRecieveString;
+                        }
+                    }
+                    else
+                    {
+                        MeasurementValues.Instance().IRCenter = DefaultValues.Instance().IRCenter;
+                        MeasurementValues.Instance().JudgeIRCenter = MeasurementValues.Judge.OK;
+                        MeasurementValues.Instance().IRRight = DefaultValues.Instance().IRRight;
+                        MeasurementValues.Instance().JudgeIRRight = MeasurementValues.Judge.OK;
+                        MeasurementValues.Instance().IRLeft = DefaultValues.Instance().IRLeft;
+                        MeasurementValues.Instance().JudgeIRLeft = MeasurementValues.Judge.OK;
+                    }
+
+                }));
             }
         }
         bool CheckIROKNG(List<float> lstRight, List<float> lstCenter, List<float> lstLeft)
@@ -1323,10 +1335,10 @@ namespace AssyChargeSEHC
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_ExpirationDay <= 0 && _type == LicenseType.TRIAL)
-            {
-                return;
-            }
+            //if (_ExpirationDay <= 0 && _type == LicenseType.TRIAL)
+            //{
+            //    return;
+            //}
             using (var dao = new UserDAO())
             {
                 //Ghi nhat ky he thống
