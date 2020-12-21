@@ -110,25 +110,25 @@
                      FontWeight="Bold" Name="txtInspecItemChCur" Text="A026"/>
             <TextBox Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Margin="2" 
                      TextAlignment="Center" VerticalContentAlignment="Center" FontSize="18" 
-                     FontWeight="Bold" Name="txtProject" Text="VR800"/>
+                     FontWeight="Bold" Name="txtProject" Text="VR8000"/>
             
             <Label Grid.Row="11" Grid.Column="1" Style="{StaticResource labelTemp}" Content="Min" Background="#FFDCA2A2" Foreground="#FF1935E0"/>
             <Label Grid.Row="11" Grid.Column="2" Style="{StaticResource labelTemp}" Content="Max" Background="#FFDCA2A2" Foreground="#FF1935E0"/>
 
             <!--Textbox nhap gia tri Min-->
             <TextBox x:Name="tbStVolMin" Grid.Row="12" Grid.Column="1" Margin="2" Style="{StaticResource textboxTemp}" FontWeight="Bold"
-                     Text="7.0"/>
+                     Text="0.0"/>
             <TextBox x:Name="tbChVolMin" Grid.Row="13" Grid.Column="1" Margin="2" Style="{StaticResource textboxTemp}" FontWeight="Bold"
-                     Text="24.0"/>
+                     Text="00.0"/>
             <TextBox x:Name="tbChCurMin" Grid.Row="14" Grid.Column="1" Margin="2" Style="{StaticResource textboxTemp}" FontWeight="Bold"
-                     Text="0.95"/>
+                     Text="0.00"/>
             <!--Textbox nhap gia tri max-->
             <TextBox x:Name="tbStVolMax" Grid.Row="12" Grid.Column="2" Margin="2" Style="{StaticResource textboxTemp}" FontWeight="Bold"
-                     Text="9.0"/>
+                     Text="0.0"/>
             <TextBox x:Name="tbChVolMax" Grid.Row="13" Grid.Column="2" Margin="2" Style="{StaticResource textboxTemp}" FontWeight="Bold"
-                     Text="25.6"/>
+                     Text="00.0"/>
             <TextBox x:Name="tbChCurMax" Grid.Row="14" Grid.Column="2" Margin="2" Style="{StaticResource textboxTemp}" FontWeight="Bold"
-                     Text="1.10"/>
+                     Text="0.00"/>
             
             <Button Grid.Column="1" Grid.Row="15" Margin="2" Content="OK" FontSize="20" FontWeight="Bold"
                     Background="#FF1F5EE6" Foreground="White" Name="btnOK" Click="btnOK_Click"/>

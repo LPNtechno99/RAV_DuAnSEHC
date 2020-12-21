@@ -33,7 +33,7 @@ namespace AssyChargeSEHC
         EEIPClient eeipClient = null;
         Thread _threadPLC;
         Thread _threadProcess;
-        //DispatcherTimer timer = new DispatcherTimer();
+        DispatcherTimer timerTaskTime = new DispatcherTimer();
         //DispatcherTimer timerPLC = new DispatcherTimer();
 
         //Connect Excel
@@ -70,7 +70,8 @@ namespace AssyChargeSEHC
             //{
             //    return;
             //}
-
+            timerTaskTime.Interval = TimeSpan.FromMilliseconds(1000);
+            timerTaskTime.Tick += TimerTaskTime_Tick;
             InitialGraph();
             //Binding
 
@@ -100,15 +101,20 @@ namespace AssyChargeSEHC
             this.lbChVolMax.DataContext = DefaultValues.Instance();
             this.lbChCurMin.DataContext = DefaultValues.Instance();
             this.lbChCurMax.DataContext = DefaultValues.Instance();
-
-            this.lblStartTime.DataContext = DefaultValues.Instance();
-            this.lblEndTime.DataContext = DefaultValues.Instance();
+            this.lblTaskTime.DataContext = DefaultValues.Instance();
+       
 
             StartAppExcel();
             InitializeCOM_PLC();
             Initial_Get_CounterAmount();
 
         }
+
+        private void TimerTaskTime_Tick(object sender, EventArgs e)
+        {
+            DefaultValues.Instance().TaskTime++;
+        }
+
         private void CheckKeyActive(string productID, ref int ExpirationDay, ref LicenseType type)
         {
             KeyManager km = new KeyManager(productID);
@@ -277,6 +283,7 @@ namespace AssyChargeSEHC
 
                 DefaultValues.Instance().StartTime = "--:--:--";
                 DefaultValues.Instance().EndTime = "--:--:--";
+                DefaultValues.Instance().TaskTime = 0;
 
                 //imgQRCode.Source = null;
                 //imgQRCode.InvalidateVisual();
@@ -626,12 +633,14 @@ namespace AssyChargeSEHC
                         {
                             ResetBackDefault();
                             await Wait1Second();
+                            
                         }
                         break;
                     case 1:
 
                         if (!COM_MeasureVolCur.IsOpen)
                         {
+                            timerTaskTime.Start();
                             DefaultValues.Instance().StartTime = DateTime.Now.ToString("yyyyMMddHHmmss");
                             Dispatcher.Invoke(new Action(() =>
                             {
@@ -733,6 +742,7 @@ namespace AssyChargeSEHC
                                 }
                             }
                             DefaultValues.Instance().EndTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+                            
                             if (MeasurementValues.Instance().JudgeFinal == MeasurementValues.Judge.OK)
                             {
                                 // Gửi dữ liệu cho máy in QRCode
@@ -743,7 +753,7 @@ namespace AssyChargeSEHC
                                     DefaultValues.Instance().StartTime + "/" + DefaultValues.Instance().EndTime;
                                 Common.Instance()._Time = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-                                Common.Instance()._QRCode = Common.Instance().QRCodeString(MeasurementValues.Instance().VoltageStandby.ToString(), MeasurementValues.Instance().Voltage.ToString(), MeasurementValues.Instance().Current.ToString());
+                                Common.Instance()._QRCode = Common.Instance().QRCodeString(MeasurementValues.Instance().VoltageStandby.ToString("000.0"), MeasurementValues.Instance().Voltage.ToString("000.0"), MeasurementValues.Instance().Current.ToString("00.00"));
                                 await Wait1Second();
                                 SendZplOverTcp(PrinterIPAddress, DefaultValues.Instance().MaterialCode, Common.Instance()._QRCode);
 
@@ -767,7 +777,7 @@ namespace AssyChargeSEHC
                             });
                             _flagIR = false;
                             _flagSetIni = true;
-
+                            timerTaskTime.Stop();
                         }
                         // Gửi dữ liệu cho PLC đưa cơ cấu lại vị trí bắt đầu, (đặt giá trị thanh ghi về O)
                         //_currentProgram = 0;
@@ -1738,6 +1748,12 @@ namespace AssyChargeSEHC
                             mnuSetCurrent.IsEnabled = true;
                             mnuChangePass.IsEnabled = true;
                             mnuLogs.IsEnabled = true;
+                            chbStandbyVol.IsEnabled = true;
+                            chbIRLeft.IsEnabled = true;
+                            chbIRCenter.IsEnabled = true;
+                            chbIRRight.IsEnabled = true;
+                            chbCharVol.IsEnabled = true;
+                            chbCharCur.IsEnabled = true;
                             break;
                         case 2:
                             mnuSetCurrent.IsEnabled = true;
@@ -1757,6 +1773,13 @@ namespace AssyChargeSEHC
                         mnuSetCurrent.IsEnabled = false;
                         mnuChangePass.IsEnabled = false;
                         mnuLogs.IsEnabled = false;
+
+                        chbStandbyVol.IsEnabled = false;
+                        chbIRLeft.IsEnabled = false;
+                        chbIRCenter.IsEnabled = false;
+                        chbIRRight.IsEnabled = false;
+                        chbCharVol.IsEnabled = false;
+                        chbCharCur.IsEnabled = false;
                     }
                     break;
                 default:

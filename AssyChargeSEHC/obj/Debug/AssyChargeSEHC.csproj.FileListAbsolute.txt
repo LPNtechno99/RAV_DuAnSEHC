@@ -1365,4 +1365,3 @@ D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (21-12-2020)\AssyChargeSEHC\obj\Debug\AssyC
 D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (21-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.csproj.CopyComplete
 D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (21-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.exe
 D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (21-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.pdb
-D:\PM\SEHC\RAV_DuAnSEHC\RAV_DuAnSEHC (21-12-2020)\AssyChargeSEHC\obj\Debug\AssyChargeSEHC.csprojAssemblyReference.cache

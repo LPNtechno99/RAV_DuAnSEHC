@@ -22,6 +22,17 @@ namespace AssyChargeSEHC
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public int ID { get; set; }
+        private int _TaskTime = 0;
+        public int TaskTime
+        {
+            get { return _TaskTime; }
+            set
+            {
+                _TaskTime = value;
+                OnPropertyChanged("TaskTime");
+            }
+
+        }
         private string _StartTime = "--:--:--";
         public string StartTime
         {

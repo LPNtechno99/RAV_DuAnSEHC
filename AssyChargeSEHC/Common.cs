@@ -73,9 +73,9 @@ namespace AssyChargeSEHC
         {
             string _s = "";
             _s = _Strings + "/"
-                + _standbyVol + "-" + paraStandbyVol + "-" + DefaultValues.Instance().StandbyVoltageMax + "-" + DefaultValues.Instance().StandbyVoltageMin + "/"
-                + _chargerVol + "-" + paraChargerVol + "-" + DefaultValues.Instance().ChargingVoltageMax + "-" + DefaultValues.Instance().ChargingVoltageMin + "/"
-                + _chargerCur + "-" + paraChargerCur + "-" + DefaultValues.Instance().ChargingCurrentMax + "-" + DefaultValues.Instance().ChargingCurrentMin + "/";
+                + _standbyVol + "-" + paraStandbyVol + "-"  + DefaultValues.Instance().StandbyVoltageMax.ToString("000.0") + "-"  + DefaultValues.Instance().StandbyVoltageMin.ToString("000.0") + "/"
+                + _chargerVol + "-" + paraChargerVol + "-" + DefaultValues.Instance().ChargingVoltageMax.ToString("000.0") + "-" + DefaultValues.Instance().ChargingVoltageMin.ToString("000.0") + "/"
+                + _chargerCur + "-" + paraChargerCur + "-" + DefaultValues.Instance().ChargingCurrentMax.ToString("00.00") + "-" + DefaultValues.Instance().ChargingCurrentMin.ToString("00.00") + "/";
             return _s;
         }
         public string _QRCode { get; set; }
