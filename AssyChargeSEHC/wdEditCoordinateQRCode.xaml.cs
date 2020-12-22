@@ -26,7 +26,16 @@ namespace AssyChargeSEHC
             InitializeComponent();
         }
 
-        private void Event_PushEsc(object sender, CanExecuteRoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            txtXCoorQR.Text = Properties.Settings.Default.XCoorQR.ToString();
+            txtYCoorQR.Text = Properties.Settings.Default.YCoorQR.ToString();
+
+            txtXCoorMaterialCode.Text = Properties.Settings.Default.XCoorMaterial.ToString();
+            txtYCoorMaterialCode.Text = Properties.Settings.Default.YCoorMaterial.ToString();
+        }
+
+        private void Event_PushEsc(object sender, ExecutedRoutedEventArgs e)
         {
             int x1 = int.Parse(txtXCoorQR.Text.Trim());
             int y1 = int.Parse(txtYCoorQR.Text.Trim());
@@ -39,15 +48,7 @@ namespace AssyChargeSEHC
             Properties.Settings.Default.Save();
             if (EventSaveAndExit != null)
                 EventSaveAndExit.Invoke(ref x1, ref y1, ref x2, ref y2);
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            txtXCoorQR.Text = Properties.Settings.Default.XCoorQR.ToString();
-            txtYCoorQR.Text = Properties.Settings.Default.YCoorQR.ToString();
-
-            txtXCoorMaterialCode.Text = Properties.Settings.Default.XCoorMaterial.ToString();
-            txtYCoorMaterialCode.Text = Properties.Settings.Default.YCoorMaterial.ToString();
+            this.Close();
         }
     }
 }

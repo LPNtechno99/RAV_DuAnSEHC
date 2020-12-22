@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="XCoorQR" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">35</Value>
+      <Value Profile="(Default)">45</Value>
     </Setting>
     <Setting Name="YCoorQR" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">45</Value>
+      <Value Profile="(Default)">220</Value>
     </Setting>
     <Setting Name="XCoorMaterial" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">45</Value>
+      <Value Profile="(Default)">35</Value>
     </Setting>
     <Setting Name="YCoorMaterial" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">220</Value>
+      <Value Profile="(Default)">45</Value>
     </Setting>
   </Settings>
 </SettingsFile>

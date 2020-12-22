@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,6 +36,8 @@ namespace AssyChargeSEHC
         }
         async void SetValueCurrent()
         {
+             await ResetDefault();
+
             float f1 = _DefaultCurrent;
             int number = 0;
             int[] arr = new int[3];
@@ -82,22 +85,27 @@ namespace AssyChargeSEHC
             MainWindow.COM_MeasureVolCur.Write(_cmdSetup, 0, _cmdSetup.Length);
             await Wait1Second();
             await Wait1Second();
+            this.Close();
         }
         //Reset dong ho do vol Cur
-        async void ResetDefault()
+        async Task ResetDefault()
         {
             MainWindow.COM_MeasureVolCur.Write(_cmdSetup, 0, _cmdSetup.Length);
+            //Thread.Sleep(1000);
             await Wait1Second();
             for (int i = 0; i < 3; i++)
             {
                 MainWindow.COM_MeasureVolCur.Write(_cmdButtonMinus, 0, _cmdButtonMinus.Length);
-                await Wait800MiliSecond();
+                //Thread.Sleep(1000);
+                await Wait1Second();
             }
-            await Wait800MiliSecond();
+            //Thread.Sleep(1000);
+            await Wait1Second();
             for (int j = 0; j < 3; j++)
             {
                 MainWindow.COM_MeasureVolCur.Write(_cmdSetup, 0, _cmdSetup.Length);
-                await Wait800MiliSecond();
+                //Thread.Sleep(1000);
+                await Wait1Second();
             }
         }
         private async Task Wait2Second()
@@ -125,9 +133,8 @@ namespace AssyChargeSEHC
         {
             if (!MainWindow.COM_MeasureVolCur.IsOpen)
                 MainWindow.COM_MeasureVolCur.Open();
-            ResetDefault();
+            //ResetDefault();
             SetValueCurrent();
-            this.Close();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

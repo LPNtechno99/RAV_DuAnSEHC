@@ -14,7 +14,7 @@
         <KeyBinding Key="Esc" Command="{StaticResource myCommandEsc}"/>
     </Window.InputBindings>
     <Window.CommandBindings>
-        <CommandBinding Command="{StaticResource myCommandEsc}" CanExecute="Event_PushEsc"/>
+        <CommandBinding Command="{StaticResource myCommandEsc}" Executed="Event_PushEsc"/>
     </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -38,14 +38,14 @@
                 <TextBlock Text="X Coor:" TextAlignment="Center" VerticalAlignment="Center"
                            Margin="10 0 0 0" FontSize="14" FontWeight="Bold"/>
                 <TextBox Margin="5 0 0 0" TextAlignment="Right" Padding="0 0 2 0" Width="200"
-                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="35"
+                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="45"
                          Name="txtXCoorQR"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <TextBlock Text="Y Coor:" TextAlignment="Center" VerticalAlignment="Center"
                            Margin="10 0 0 0" FontSize="14" FontWeight="Bold"/>
                 <TextBox Margin="5 0 0 0" TextAlignment="Right" Padding="0 0 2 0" Width="200"
-                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="45"
+                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="220"
                          Name="txtYCoorQR"/>
             </StackPanel>
         </Grid>
@@ -58,14 +58,14 @@
                 <TextBlock Text="X Coor:" TextAlignment="Center" VerticalAlignment="Center"
                            Margin="10 0 0 0" FontSize="14" FontWeight="Bold"/>
                 <TextBox Margin="5 0 0 0" TextAlignment="Right" Padding="0 0 2 0" Width="200"
-                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="45"
+                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="35"
                          Name="txtXCoorMaterialCode"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
                 <TextBlock Text="Y Coor:" TextAlignment="Center" VerticalAlignment="Center"
                            Margin="10 0 0 0" FontSize="14" FontWeight="Bold"/>
                 <TextBox Margin="5 0 0 0" TextAlignment="Right" Padding="0 0 2 0" Width="200"
-                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="220"
+                         Height="30" FontSize="16" FontWeight="Bold" VerticalContentAlignment="Center" Text="45"
                          Name="txtYCoorMaterialCode"/>
             </StackPanel>
         </Grid>

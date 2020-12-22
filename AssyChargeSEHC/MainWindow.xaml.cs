@@ -109,9 +109,6 @@ namespace AssyChargeSEHC
             StartAppExcel();
             InitializeCOM_PLC();
             Initial_Get_CounterAmount();
-
-            wdLoadingCurrent wd = new wdLoadingCurrent();
-            wd.ShowDialog();
         }
 
         private void TimerTaskTime_Tick(object sender, EventArgs e)
@@ -723,6 +720,7 @@ namespace AssyChargeSEHC
                                 MeasurementValues.Instance().JudgeFinal = MeasurementValues.Judge.NG;
                                 Common.Instance().CountNG += 1;
                             }
+                            DefaultValues.Instance().EndTime = DateTime.Now.ToString("yyyyMMddHHmmss");
                             //Ghi dữ liệu vào file báo cáo Excel
                             try
                             {
@@ -743,7 +741,6 @@ namespace AssyChargeSEHC
                                     dao.EditCounterAmount(dt, Common.Instance().CountOK, Common.Instance().CountNG, Common.Instance().CountTotal);
                                 }
                             }
-                            DefaultValues.Instance().EndTime = DateTime.Now.ToString("yyyyMMddHHmmss");
 
                             if (MeasurementValues.Instance().JudgeFinal == MeasurementValues.Judge.OK)
                             {
@@ -873,7 +870,7 @@ namespace AssyChargeSEHC
         /// </summary>
         /// <param name="theIpAddress"></param>
         /// <param name="strPrint"></param>
-        private void SendZplOverTcp(string theIpAddress, int x1, int y1, int x2, int y2, string modelCode, string strPrint)
+        private void SendZplOverTcp(string theIpAddress, int x2, int y2, int x1, int y1, string modelCode, string strPrint)
         {
             // Instantiate connection for ZPL TCP port at given address
             Connection thePrinterConn = new TcpConnection(theIpAddress, TcpConnection.DEFAULT_ZPL_TCP_PORT);
@@ -884,7 +881,8 @@ namespace AssyChargeSEHC
                 thePrinterConn.Open();
 
                 // This example prints "This is a ZPL test." near the top of the label.
-                string zplData = "^XA^FO" + x1 + "," + y1 + "^ADN,18,10^FD" + modelCode + "^FS^FO" + x2 + "," + y2 + "^BQA,2,4,Q,7^FD,LA" + strPrint + "^FS^XZ";
+                //string zplData = "^XA^FO45,220^ADN,18,10^FD" + modelCode + "^FS^FO35,45^BQA,2,4,Q,7^FD,LA" + strPrint + "^FS^XZ";
+                string zplData = "^XA^FO" + x2 + "," + y2 + "^ADN,18,10^FD" + modelCode + "^FS^FO" + x1 + "," + y1 + "^BQA,2,4,Q,7^FD,LA" + strPrint + "^FS^XZ";
 
                 // Send the data to printer as a byte array.
                 thePrinterConn.Write(Encoding.UTF8.GetBytes(zplData));
@@ -1397,6 +1395,8 @@ namespace AssyChargeSEHC
                     }
                 }
             }
+            wdLoadingCurrent wd = new wdLoadingCurrent();
+            wd.ShowDialog();
         }
 
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -1496,7 +1496,7 @@ namespace AssyChargeSEHC
                 tempRange.Value2 = DefaultValues.Instance().IRLeft;
                 tempRange = tempRange.Offset[0, 1];
                 //Judge IRLeft
-                tempRange.Value2 = MeasurementValues.Instance().JudgeIRLeft;
+                tempRange.Value2 = MeasurementValues.Instance().JudgeIRLeft.ToString();
                 tempRange = tempRange.Offset[0, 1];
 
                 //Spec IRCenter
@@ -1506,7 +1506,7 @@ namespace AssyChargeSEHC
                 tempRange.Value2 = DefaultValues.Instance().IRCenter;
                 tempRange = tempRange.Offset[0, 1];
                 //Judge IRCenter
-                tempRange.Value2 = MeasurementValues.Instance().JudgeIRCenter;
+                tempRange.Value2 = MeasurementValues.Instance().JudgeIRCenter.ToString();
                 tempRange = tempRange.Offset[0, 1];
 
                 //Spec IRLeft
@@ -1516,7 +1516,7 @@ namespace AssyChargeSEHC
                 tempRange.Value2 = DefaultValues.Instance().IRRight;
                 tempRange = tempRange.Offset[0, 1];
                 //Judge IRLeft
-                tempRange.Value2 = MeasurementValues.Instance().JudgeIRRight;
+                tempRange.Value2 = MeasurementValues.Instance().JudgeIRRight.ToString();
                 tempRange = tempRange.Offset[0, 1];
 
                 // Charging VolMin

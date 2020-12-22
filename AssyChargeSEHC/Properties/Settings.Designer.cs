@@ -25,7 +25,7 @@ namespace AssyChargeSEHC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("35")]
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
         public int XCoorQR {
             get {
                 return ((int)(this["XCoorQR"]));
@@ -37,7 +37,7 @@ namespace AssyChargeSEHC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("45")]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
         public int YCoorQR {
             get {
                 return ((int)(this["YCoorQR"]));
@@ -49,7 +49,7 @@ namespace AssyChargeSEHC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("45")]
+        [global::System.Configuration.DefaultSettingValueAttribute("35")]
         public int XCoorMaterial {
             get {
                 return ((int)(this["XCoorMaterial"]));
@@ -61,7 +61,7 @@ namespace AssyChargeSEHC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
         public int YCoorMaterial {
             get {
                 return ((int)(this["YCoorMaterial"]));
