@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (19-12-2020)\AssyChargeSEHC\obj\Debug\
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (22-12-2020)\AssyChargeSEHC\obj\Debug\
 AssyChargeSEHC
 none
 false
 DEBUG;TRACE
-D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (19-12-2020)\AssyChargeSEHC\App.xaml
-9268755284
-31156435891
-262110795074
-76422713838
-MainWindow.xaml;wdAbouts.xaml;wdAddModel.xaml;wdChangePassword.xaml;wdCheckQRCode.xaml;wdLogin.xaml;wdRegister.xaml;wdSetCurrent.xaml;wdSystemLogs.xaml;
+D:\Local Disk F_742018351\RAV\SEHC\RAV_DuAnSEHC (22-12-2020)\AssyChargeSEHC\App.xaml
+111066517881
+3569013570
+2820639163
+762005003172
+MainWindow.xaml;wdAbouts.xaml;wdAddModel.xaml;wdChangePassword.xaml;wdCheckQRCode.xaml;wdEditCoordinateQRCode.xaml;wdLoadingCurrent.xaml;wdLogin.xaml;wdRegister.xaml;wdSetCurrent.xaml;wdSystemLogs.xaml;
 
 True
 

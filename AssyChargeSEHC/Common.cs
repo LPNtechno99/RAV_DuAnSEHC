@@ -85,8 +85,8 @@ namespace AssyChargeSEHC
         public const string _standbyVol = "A042";
         public const string _chargerVol = "A027";
         public const string _chargerCur = "A026";
-        public const string _IRLeft = "A001";
-        public const string _IRCenter = "A002";
-        public const string _IRRight = "A003";
+        public const string Spec_IRLeft = "IRL";
+        public const string Spec_IRCenter = "IRC";
+        public const string Spec_IRRight = "IRR";
     }
 }

@@ -2,14 +2,17 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AssyChargeSEHC.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="OK" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="XCoorQR" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">35</Value>
     </Setting>
-    <Setting Name="NG" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="YCoorQR" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">45</Value>
     </Setting>
-    <Setting Name="Total" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="XCoorMaterial" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">45</Value>
+    </Setting>
+    <Setting Name="YCoorMaterial" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">220</Value>
     </Setting>
   </Settings>
 </SettingsFile>

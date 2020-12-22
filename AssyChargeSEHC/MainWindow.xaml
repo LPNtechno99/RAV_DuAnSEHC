@@ -110,6 +110,9 @@
                     <MenuItem Header="Change Password" FontSize="18" FontWeight="Bold"
                               Name="mnuChangePass" IsEnabled="False" Click="mnuChangePass_Click"/>
                     <Separator/>
+                    <MenuItem Header="Set Printer" FontSize="18" FontWeight="Bold" Name="mnuSetPrinter"
+                              Click="mnuSetPrinter_Click" IsEnabled="False"/>
+                    <Separator/>
                     <MenuItem Header="Sign In" FontSize="18" FontWeight="Bold"
                               Name="mnuLogin" Click="mnuLogin_Click"/>
                     <Separator/>

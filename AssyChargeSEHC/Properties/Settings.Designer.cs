@@ -25,37 +25,49 @@ namespace AssyChargeSEHC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int OK {
+        [global::System.Configuration.DefaultSettingValueAttribute("35")]
+        public int XCoorQR {
             get {
-                return ((int)(this["OK"]));
+                return ((int)(this["XCoorQR"]));
             }
             set {
-                this["OK"] = value;
+                this["XCoorQR"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int NG {
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
+        public int YCoorQR {
             get {
-                return ((int)(this["NG"]));
+                return ((int)(this["YCoorQR"]));
             }
             set {
-                this["NG"] = value;
+                this["YCoorQR"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Total {
+        [global::System.Configuration.DefaultSettingValueAttribute("45")]
+        public int XCoorMaterial {
             get {
-                return ((int)(this["Total"]));
+                return ((int)(this["XCoorMaterial"]));
             }
             set {
-                this["Total"] = value;
+                this["XCoorMaterial"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("220")]
+        public int YCoorMaterial {
+            get {
+                return ((int)(this["YCoorMaterial"]));
+            }
+            set {
+                this["YCoorMaterial"] = value;
             }
         }
     }

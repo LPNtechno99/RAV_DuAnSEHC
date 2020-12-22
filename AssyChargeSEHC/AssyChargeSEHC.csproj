@@ -268,6 +268,12 @@
     <Compile Include="wdCheckQRCode.xaml.cs">
       <DependentUpon>wdCheckQRCode.xaml</DependentUpon>
     </Compile>
+    <Compile Include="wdEditCoordinateQRCode.xaml.cs">
+      <DependentUpon>wdEditCoordinateQRCode.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="wdLoadingCurrent.xaml.cs">
+      <DependentUpon>wdLoadingCurrent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="wdLogin.xaml.cs">
       <DependentUpon>wdLogin.xaml</DependentUpon>
     </Compile>
@@ -308,6 +314,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="wdCheckQRCode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="wdEditCoordinateQRCode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="wdLoadingCurrent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
