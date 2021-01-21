@@ -115,6 +115,17 @@
                     <Separator/>
                     <MenuItem Header="Sign Out" FontSize="18" FontWeight="Bold"
                               Name="mnuSignOut" Click="mnuSignOut_Click"/>
+                    <Separator/>
+                    <MenuItem Visibility="Collapsed" Header="Register" FontSize="18" FontWeight="Bold"
+                              Name="mnuRegister" Click="mnuRegister_Click"/>
+                </MenuItem>
+                <MenuItem Visibility="Collapsed" FontSize="20" FontWeight="Bold" Name="mnuAbouts" Click="mnuAbouts_Click">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Images/about-32.png" Height="20"/>
+                            <TextBlock Margin="5 0 0 0" Text="Abouts"/>
+                        </StackPanel>
+                    </MenuItem.Header>
                 </MenuItem>
             </Menu>
         </Grid>
@@ -228,42 +239,45 @@
                         <Label Name="labelJudgeCurrent" Grid.Row="7" Grid.Column="5" Style="{StaticResource labelStyle}" Background="{Binding JudgeCurrent,Converter={StaticResource ColorChangeOKNG}}" Foreground="White" Content="{Binding JudgeCurrent,UpdateSourceTrigger=PropertyChanged}"/>
                         <!--Checkbox Check-->
                         <Border Grid.Row="2" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox x:Name="chbStandbyVol" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="3" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox x:Name="chbIRLeft" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                                      >
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="4" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox x:Name="chbIRCenter" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                                      Unchecked="chbIRCenter_Unchecked">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="5" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox x:Name="chbIRRight" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                                      >
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="6" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox x:Name="chbCharVol" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
                             </CheckBox>
                         </Border>
                         <Border Grid.Row="7" Grid.Column="6" BorderBrush="Black" BorderThickness="0.6">
-                            <CheckBox IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
+                            <CheckBox x:Name="chbCharCur" IsChecked="True" VerticalAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
@@ -361,7 +375,7 @@
                     <TextBox Padding="15 15 0 0" Name="txtMessage" Grid.Row="1" Background="#FF3C668F"
                              Foreground="White" FontSize="14" FontWeight="Bold" AcceptsReturn="True"/>
                 </Grid>
-                <Grid Grid.Row="2">
+                <!--<Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="5*"/>
@@ -375,6 +389,24 @@
                     </Label>
 
                     <Image Grid.Row="1" Stretch="Uniform" Margin="20" Name="imgQRCode"/>
+                </Grid>-->
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                        <TextBlock Text="Start Time:" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+                        <Label Margin="5 0 0 0" FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center" Name="lblStartTime"
+                               Content="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10 0 0 0">
+                        <TextBlock Text="End Time:" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"/>
+                        <Label Margin="5 0 0 0" FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center" Name="lblEndTime"
+                               Content="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Grid>
@@ -400,7 +432,7 @@
                 <Label Grid.Row="0" Grid.Column="2" Style="{StaticResource labelStyle}" Content="NG"/>
                 <Label Grid.Row="0" Grid.Column="3" Style="{StaticResource labelStyle}" Content="Total"/>
                 <!--Label gia tri-->
-                <Button Grid.Row="1" Content="RESET" FontSize="32" FontWeight="Bold" BorderBrush="Black" BorderThickness="0.8" Name="buttonReset" Click="buttonReset_Click"/>
+                <!--<Button Grid.Row="1" Content="RESET" FontSize="32" FontWeight="Bold" BorderBrush="Black" BorderThickness="0.8" Name="buttonReset" Click="buttonReset_Click"/>-->
                 <Label Grid.Row="1" Grid.Column="1" x:Name="labelOK" Style="{StaticResource labelStyle}" Background="White" Foreground="#FF196819"
                        FontSize="36" Content="{Binding CountOK, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Grid.Row="1" Grid.Column="2" x:Name="labelNG" Style="{StaticResource labelStyle}" Background="White" Foreground="#FFCD2323"

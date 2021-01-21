@@ -22,6 +22,19 @@ namespace AssyChargeSEHC
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        private string _ProductID;
+        public string ProductID
+        {
+            set
+            {
+                _ProductID = value;
+            }
+            get
+            {
+                return _ProductID;
+            }
+        }
+
         private int _countpass = 0;
         private int _countng = 0;
         private int _counttotal = 0;
@@ -59,7 +72,7 @@ namespace AssyChargeSEHC
         public string QRCodeString(string paraIRLeft, string paraIRCenter, string paraIRRight, string paraStandbyVol, string paraChargerVol, string paraChargerCur)
         {
             string _s = "";
-            _s = _ModelCode + _Strings + "/" + _Time + "/"
+            _s = _Strings + "/"
                 + _IRLeft + "-" + paraIRLeft + "/"
                 + _IRCenter + "-" + paraIRCenter + "/"
                 + _IRRight + "-" + paraIRRight + "/"
@@ -69,7 +82,7 @@ namespace AssyChargeSEHC
             return _s;
         }
         public string _QRCode { get; set; }
-        public string _ModelCode { get; set; }
+        public string _MaterialCode { get; set; }
         public string _Strings { get; set; }
         public string _Time { get; set; }
         public const string _standbyVol = "A042";

@@ -1,0 +1,42 @@
+﻿<Window x:Class="AssyChargeSEHC.wdAbouts"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AssyChargeSEHC"
+        mc:Ignorable="d"
+        Title="wdAbouts" Height="300" Width="600" WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="Product Name:" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"/>
+        <Label Grid.Column="1" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"
+               Name="lblProductName"/>
+        <Label Grid.Row="1" Content="Product Key:" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"/>
+        <Label Grid.Column="1" Grid.Row="1" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"
+               Name="lblProductKey"/>
+        <Label Grid.Row="2" Content="License Type:" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"/>
+        <Label Grid.Column="2" Grid.Row="2" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"
+               Name="lblLicenseType"/>
+        <Label Grid.Row="3" Content="Expiration Day:" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"/>
+        <Label Grid.Column="1" Grid.Row="3" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"
+               Name="lblExpirationDay"/>
+        <Label Grid.Row="4" Content="Remain Day:" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"/>
+        <Label Grid.Column="1" Grid.Row="4" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"
+               Name="lblRemainDay"/>
+        <Button Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0" Width="80"
+                Margin="6" Content="OK" FontSize="18" FontWeight="Bold"
+                Name="btnOK" Click="btnOK_Click" VerticalContentAlignment="Center"/>
+    </Grid>
+</Window>

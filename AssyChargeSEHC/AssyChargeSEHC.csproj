@@ -72,6 +72,9 @@
     <Reference Include="FluentFTP, Version=19.2.2.0, Culture=neutral, PublicKeyToken=f4af092b1d8df44f, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentFTP.19.2.2\lib\net45\FluentFTP.dll</HintPath>
     </Reference>
+    <Reference Include="FoxLearn.License">
+      <HintPath>..\..\..\..\DU_AN_CA_NHAN\Tool\FoxLearn.License.dll</HintPath>
+    </Reference>
     <Reference Include="IronBarCode, Version=2020.6.0.0, Culture=neutral, PublicKeyToken=b971bb3971bdf306, processorArchitecture=MSIL">
       <HintPath>..\packages\BarCode.2020.6.0\lib\net40\IronBarCode.dll</HintPath>
     </Reference>
@@ -253,6 +256,9 @@
     <Compile Include="ModelEF\Account.cs" />
     <Compile Include="ModelEF\CounterAmount.cs" />
     <Compile Include="ModelEF\SystemLogs.cs" />
+    <Compile Include="wdAbouts.xaml.cs">
+      <DependentUpon>wdAbouts.xaml</DependentUpon>
+    </Compile>
     <Compile Include="wdAddModel.xaml.cs">
       <DependentUpon>wdAddModel.xaml</DependentUpon>
     </Compile>
@@ -264,6 +270,9 @@
     </Compile>
     <Compile Include="wdLogin.xaml.cs">
       <DependentUpon>wdLogin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="wdRegister.xaml.cs">
+      <DependentUpon>wdRegister.xaml</DependentUpon>
     </Compile>
     <Compile Include="wdSetCurrent.xaml.cs">
       <DependentUpon>wdSetCurrent.xaml</DependentUpon>
@@ -286,6 +295,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="wdAbouts.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="wdAddModel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -299,6 +312,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="wdLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="wdRegister.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

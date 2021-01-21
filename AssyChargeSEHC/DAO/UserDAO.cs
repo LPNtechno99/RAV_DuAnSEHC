@@ -25,7 +25,7 @@ namespace AssyChargeSEHC.DAO
         /// <returns></returns>
         public List<string> GetModelList()
         {
-            return db.ModelList.Select(x => x.ModelName).ToList();
+            return db.ModelList.Select(x => x.MaterialCode).ToList();
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace AssyChargeSEHC.DAO
         /// <returns></returns>
         public List<ModelList> GetDefaultValues(string modelName)
         {
-            return db.ModelList.Where(x => x.ModelName == modelName).ToList();
+            return db.ModelList.Where(x => x.MaterialCode == modelName).ToList();
         }
         /// <summary>
         /// get Result List
@@ -55,19 +55,29 @@ namespace AssyChargeSEHC.DAO
         /// <param name="ChVolMax"></param>
         /// <param name="ChCurMin"></param>
         /// <param name="ChCurMax"></param>
-        public void AddModel(string modelName, string StVolMin, string StVolMax, string ChVolMin, string ChVolMax, string ChCurMin, string ChCurMax)
+        public void AddModel(List<string> lstData)
         {
             try
             {
                 var md = new ModelList()
                 {
-                    ModelName = modelName,
-                    StandbyVoltageMin = StVolMin,
-                    StandbyVoltageMax = StVolMax,
-                    ChargingVoltageMin = ChVolMin,
-                    ChargingVoltageMax = ChVolMax,
-                    ChargingCurrentMin = ChCurMin,
-                    ChargingCurrentMax = ChCurMax
+                    UnitCode = lstData[0],
+                    MaterialCode = lstData[1],
+                    SupplierCode = lstData[2],
+                    CountryCode = lstData[3],
+                    ProductionLine = lstData[4],
+                    InspecEquipNumber = lstData[5],
+                    NumberOfInspecItem = lstData[6],
+                    InspecItem1 = lstData[7],
+                    StandbyVoltageMax = lstData[8],
+                    StandbyVoltageMin = lstData[9],
+                    InspecItem2 = lstData[10],
+                    ChargingVoltageMax = lstData[11],
+                    ChargingVoltageMin = lstData[12],
+                    InspecItem3 = lstData[13],
+                    ChargingCurrentMax = lstData[14],
+                    ChargingCurrentMin = lstData[15],
+                    Project = lstData[16]
                 };
                 db.Add(md);
                 db.SaveChanges();
@@ -79,18 +89,30 @@ namespace AssyChargeSEHC.DAO
         /// </summary>
         /// <param name="modelName"></param>
         /// <param name="arrModel"></param>
-        public void EditModel(string modelName, string[] arrModel)
+        public void EditModel(string modelName, List<string> lstModel)
         {
             try
             {
-                var existing = db.ModelList.Where(x => x.ModelName == modelName).ToArray();
-                existing[0].ModelName = arrModel[0];
-                existing[0].StandbyVoltageMin = arrModel[1];
-                existing[0].StandbyVoltageMax = arrModel[2];
-                existing[0].ChargingVoltageMin = arrModel[3];
-                existing[0].ChargingVoltageMax = arrModel[4];
-                existing[0].ChargingCurrentMin = arrModel[5];
-                existing[0].ChargingCurrentMax = arrModel[6];
+                var existing = db.ModelList.Where(x => x.MaterialCode == modelName).ToArray();
+
+                existing[0].UnitCode = lstModel[0];
+                existing[0].MaterialCode = lstModel[1];
+                existing[0].SupplierCode = lstModel[2];
+                existing[0].CountryCode = lstModel[3];
+                existing[0].ProductionLine = lstModel[4];
+                existing[0].InspecEquipNumber = lstModel[5];
+                existing[0].NumberOfInspecItem = lstModel[6];
+                existing[0].InspecItem1 = lstModel[7];
+                existing[0].StandbyVoltageMax = lstModel[8];
+                existing[0].StandbyVoltageMin = lstModel[9];
+                existing[0].InspecItem2 = lstModel[10];
+                existing[0].ChargingVoltageMax = lstModel[11];
+                existing[0].ChargingVoltageMin = lstModel[12];
+                existing[0].InspecItem3 = lstModel[13];
+                existing[0].ChargingCurrentMax = lstModel[14];
+                existing[0].ChargingCurrentMin = lstModel[15];
+                existing[0].Project = lstModel[16];
+
                 db.SaveChanges();
             }
             catch (Exception ex)

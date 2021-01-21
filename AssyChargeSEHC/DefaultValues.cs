@@ -22,21 +22,46 @@ namespace AssyChargeSEHC
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public int ID { get; set; }
-        public string StartTime { get; set; }
-
-        private string _ModelName;
-        public string ModelName
+        private string _StartTime = "--:--:--";
+        public string StartTime
         {
-            get { return _ModelName; }
+            get { return _StartTime; }
             set
             {
-                _ModelName = value;
-                OnPropertyChanged("ModelName");
+                _StartTime = value;
+                OnPropertyChanged("StartTime");
+            }
+        }
+        private string _EndTime = "--:--:--";
+        public string EndTime
+        {
+            get { return _EndTime; }
+            set
+            {
+                _EndTime = value;
+                OnPropertyChanged("EndTime");
             }
         }
 
+        public string UnitCode { get; set; }
+        private string _MaterialCode;
+        public string MaterialCode
+        {
+            get { return _MaterialCode; }
+            set
+            {
+                _MaterialCode = value;
+                OnPropertyChanged("ModelName");
+            }
+        }
+        public string SupplierCode { get; set; }
+        public string CountryCode { get; set; }
+        public string ProductionLine { get; set; }
+        public string InspecEquipNumber { get; set; }
+        public string NumberOfInspecItem { get; set; }
+        public string InspecItem1 { get; set; }
         private float _StVolMin;
-        public float StandbyVoltageMin 
+        public float StandbyVoltageMin
         {
             get { return _StVolMin; }
             set
@@ -55,6 +80,7 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("StandbyVoltageMax");
             }
         }
+        public string InspecItem2 { get; set; }
         private float _ChVolMin;
         public float ChargingVoltageMin
         {
@@ -75,6 +101,7 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("ChargingVoltageMax");
             }
         }
+        public string InspecItem3 { get; set; }
         private float _ChCurMin;
         public float ChargingCurrentMin
         {
@@ -95,6 +122,7 @@ namespace AssyChargeSEHC
                 OnPropertyChanged("ChargingCurrentMax");
             }
         }
+        public string Project { get; set; }
         public string IRLeft { get; set; } = "L0111X";
         public string IRCenter { get; set; } = "L111XX";
         public string IRRight { get; set; } = "L011X1";
